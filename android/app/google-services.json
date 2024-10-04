@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "305536261438",
+    "project_id": "movie-hub-flutter",
+    "storage_bucket": "movie-hub-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:305536261438:android:37e0ba7b4095e4fa03a06f",
+        "android_client_info": {
+          "package_name": "com.example.movieHub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDoXvGjASdgUK6ywxAN5NovHLXFO-bLiiM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
