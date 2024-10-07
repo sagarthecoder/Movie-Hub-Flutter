@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_hub/Modules/UISections/Dashboard/Views/DashboardScreen.dart';
 
 import 'WavePainter.dart';
 
@@ -15,7 +16,7 @@ class IntroScreen extends StatelessWidget {
           children: [
             setFullScreenBackgroundImage(),
             makeWave(),
-            buildIntroDescription(),
+            buildIntroDescription(context),
           ],
         ),
       ),
@@ -38,13 +39,13 @@ class IntroScreen extends StatelessWidget {
         clipper: WavePainter(),
         child: Container(
           color: Colors.grey,
-          height: 450,
+          height: 430,
         ),
       ),
     );
   }
 
-  Widget buildIntroDescription() {
+  Widget buildIntroDescription(BuildContext context) {
     return Align(
       alignment: Alignment.bottomLeft,
       child: Container(
@@ -57,7 +58,7 @@ class IntroScreen extends StatelessWidget {
             const Text(
               'Movie Hub',
               style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 30,
                   fontWeight: FontWeight.bold,
                   color: Colors.white),
             ),
@@ -68,13 +69,18 @@ class IntroScreen extends StatelessWidget {
               "Welcome to Movie-hub.\n Here you will get latest and old movies\nWatch them and enjoy!!!",
               textAlign: TextAlign.center,
               style: TextStyle(
-                  fontSize: 10, color: Colors.white38, letterSpacing: 1),
+                  fontSize: 14, color: Colors.white38, letterSpacing: 1),
             ),
             const SizedBox(
               height: 60,
             ),
             ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => DashboardScreen()),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blueAccent,
                   shape: RoundedRectangleBorder(
