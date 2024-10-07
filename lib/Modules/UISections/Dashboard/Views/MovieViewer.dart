@@ -15,14 +15,16 @@ class MovieViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildHeader(),
-        const SizedBox(
-          height: 16,
-        ),
-        _buildMovieList(),
-      ],
+    return Container(
+      child: Column(
+        children: [
+          _buildHeader(),
+          const SizedBox(
+            height: 16,
+          ),
+          _buildMovieList(),
+        ],
+      ),
     );
   }
 
@@ -61,7 +63,7 @@ class MovieViewer extends StatelessWidget {
     return Container(
       width: 150.0,
       height: 266.67,
-      margin: EdgeInsets.only(left: 16, right: 16),
+      margin: const EdgeInsets.only(left: 16, right: 16),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
         child: Image.network(
@@ -71,7 +73,7 @@ class MovieViewer extends StatelessWidget {
             // Handle image loading error
             return Container(
               color: Colors.grey,
-              child: Center(
+              child: const Center(
                 child: Text('No image available',
                     style: TextStyle(color: Colors.white)),
               ),

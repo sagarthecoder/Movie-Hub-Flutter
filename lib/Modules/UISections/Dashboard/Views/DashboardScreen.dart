@@ -15,41 +15,103 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black87,
-      body: Container(
-        margin: EdgeInsets.only(top: 60),
-        height: double.infinity,
+      body: Stack(
+        children: [
+          _setFullScreenBackgroundImage(),
+          _displayOnScreenWidget(),
+        ],
+      ),
+    );
+  }
+
+  Widget _setFullScreenBackgroundImage() {
+    return Image.asset(
+      "utils/images/blurry-background.png",
+      fit: BoxFit.fill,
+      width: double.infinity,
+      height: double.infinity,
+    );
+  }
+
+  Widget _displayOnScreenWidget() {
+    return Container(
+      margin: EdgeInsets.only(top: 60),
+      height: double.infinity,
+      child: Column(
+        children: [
+          _buildUserInfo(),
+          _buildTopRatedMovies(),
+          _buildUpcomingMovies(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUserInfo() {
+    return Container(
+      margin: EdgeInsets.only(left: 16),
+      child: const Align(
+        alignment: Alignment.topLeft,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Obx(() {
-              // This will rebuild when topRatedMovieList changes
-              if (viewModel.topRatedMovieList.isNotEmpty) {
-                return MovieViewer(
-                  title: "Top Rated Movies",
-                  movieItems: viewModel.topRatedMovieList,
-                );
-              } else {
-                return Center(
-                  child: CircularProgressIndicator(
-                    color: Colors.pink,
-                  ),
-                );
-              }
-            }),
-            SizedBox(height: 10),
-            Obx(() {
-              // This will rebuild when topRatedMovieList changes
-              if (viewModel.topRatedMovieList.isNotEmpty) {
-                return MovieViewer(
-                  title: "Upcoming Movies",
-                  movieItems: viewModel.upcomingMovieList,
-                );
-              } else {
-                return Container();
-              }
-            }),
+            const Text(
+              'Welcome back',
+              style: TextStyle(fontSize: 9, color: Colors.white),
+            ),
+            Text(
+              'Sagar Das',
+              style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildTopRatedMovies() {
+    return Obx(() {
+      // This will rebuild when topRatedMovieList changes
+      if (viewModel.topRatedMovieList.isNotEmpty) {
+        return Container(
+          margin: EdgeInsets.only(top: 30),
+          child: MovieViewer(
+            title: "Top Rated Movies",
+            movieItems: viewModel.topRatedMovieList,
+          ),
+        );
+      } else {
+        return const Center(
+          child: CircularProgressIndicator(
+            color: Colors.pink,
+          ),
+        );
+      }
+    });
+  }
+
+  Widget _buildUpcomingMovies() {
+    return Obx(() {
+      // This will rebuild when topRatedMovieList changes
+      if (viewModel.upcomingMovieList.isNotEmpty) {
+        return Container(
+          margin: EdgeInsets.only(top: 30),
+          child: MovieViewer(
+            title: "Upcoming Movies",
+            movieItems: viewModel.upcomingMovieList,
+          ),
+        );
+      } else {
+        return const Center(
+          child: CircularProgressIndicator(
+            color: Colors.pink,
+          ),
+        );
+      }
+    });
   }
 }
