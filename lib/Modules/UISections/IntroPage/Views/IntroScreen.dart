@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_hub/Modules/UISections/Dashboard/Views/DashboardScreen.dart';
+import 'package:movie_hub/Modules/UISections/Oauth/Login/Views/LoginScreen.dart';
 
 import 'WavePainter.dart';
 
@@ -78,7 +79,7 @@ class IntroScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => DashboardScreen()),
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
