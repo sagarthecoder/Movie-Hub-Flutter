@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -60,25 +61,25 @@ class MovieViewer extends StatelessWidget {
   }
 
   Widget _buildMovieItem(MovieInfo item) {
+    String url = MovieApiConfig.posterBaseURL + (item.posterPath ?? "");
     return Container(
       width: 150.0,
       height: 266.67,
       margin: const EdgeInsets.only(left: 16, right: 16),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
-        child: Image.network(
-          MovieApiConfig.posterBaseURL + (item.posterPath ?? ""),
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            // Handle image loading error
-            return Container(
-              color: Colors.grey,
-              child: const Center(
-                child: Text('No image available',
-                    style: TextStyle(color: Colors.white)),
+        child: CachedNetworkImage(
+          imageUrl: url,
+          imageBuilder: (context, imageProvider) => Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: imageProvider,
+                fit: BoxFit.cover,
               ),
-            );
-          },
+            ),
+          ),
+          placeholder: (context, url) => const CircularProgressIndicator(),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
         ),
       ),
     );
