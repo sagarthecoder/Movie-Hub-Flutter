@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:movie_hub/Modules/UISections/Dashboard/ViewModel/MovieViewModel.dart';
+import 'package:movie_hub/Modules/UISections/CustomViews/FullScreenImagView.dart';
+import 'package:movie_hub/Modules/UISections/Movie/MovieDetails/ViewModel/MovieViewModel.dart';
 import 'package:movie_hub/Modules/UISections/Dashboard/Views/MovieViewer.dart';
+import 'package:movie_hub/Modules/UISections/Movie/MovieDetails/Views/MovieDetailScreen.dart';
 
 class DashboardScreen extends StatelessWidget {
   final MovieViewModel viewModel = Get.put(MovieViewModel());
@@ -18,19 +20,10 @@ class DashboardScreen extends StatelessWidget {
       backgroundColor: Colors.black87,
       body: Stack(
         children: [
-          _setFullScreenBackgroundImage(),
+          FullScreenImageView(imagePath: "utils/images/blurry-background.png"),
           _displayOnScreenWidget(),
         ],
       ),
-    );
-  }
-
-  Widget _setFullScreenBackgroundImage() {
-    return Image.asset(
-      "utils/images/blurry-background.png",
-      fit: BoxFit.fill,
-      width: double.infinity,
-      height: double.infinity,
     );
   }
 
@@ -81,6 +74,9 @@ class DashboardScreen extends StatelessWidget {
         return Container(
           margin: EdgeInsets.only(top: 30),
           child: MovieViewer(
+            movieItemCallback: (item) {
+              Get.to(() => MovieDetailScreen(movieInfo: item.obs));
+            },
             title: "Top Rated Movies",
             movieItems: viewModel.topRatedMovieList,
           ),
@@ -102,6 +98,9 @@ class DashboardScreen extends StatelessWidget {
         return Container(
           margin: EdgeInsets.only(top: 30),
           child: MovieViewer(
+            movieItemCallback: (item) {
+              Get.to(() => MovieDetailScreen(movieInfo: item.obs));
+            },
             title: "Upcoming Movies",
             movieItems: viewModel.upcomingMovieList,
           ),

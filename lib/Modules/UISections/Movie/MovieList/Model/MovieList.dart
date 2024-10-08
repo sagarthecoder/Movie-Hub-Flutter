@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:movie_hub/Modules/UISections/Dashboard/Model/MovieInfo.dart';
+import 'package:movie_hub/Modules/UISections/Movie/MovieList/Model/MovieInfo.dart';
 
 part 'MovieList.g.dart';
 

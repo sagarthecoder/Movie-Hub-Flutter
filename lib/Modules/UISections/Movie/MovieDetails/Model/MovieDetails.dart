@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:movie_hub/Modules/UISections/Dashboard/Model/GenreInfo.dart';
+import 'package:movie_hub/Modules/UISections/Movie/MovieDetails/Model/GenreInfo.dart';
 
 part 'MovieDetails.g.dart';
 
@@ -15,11 +15,14 @@ class MovieDetails {
   final String? imdbId;
   @JsonKey(name: "original_language")
   final String? originalLanguage;
+  @JsonKey(name: "original_title")
+  final String? originalTitle;
   @JsonKey(name: "poster_path")
   final String? posterPath;
   final int? popularity;
   @JsonKey(name: "release_date")
   final String? releaseDate;
+  final String? overview;
   final int? revenue;
   final int? runtime;
   final String? status;
@@ -38,7 +41,9 @@ class MovieDetails {
     this.budget,
     this.genres,
     this.imdbId,
+    this.overview,
     this.originalLanguage,
+    this.originalTitle,
     this.posterPath,
     this.popularity,
     this.releaseDate,

@@ -2,10 +2,10 @@ import 'package:get/get.dart';
 import 'package:movie_hub/Config/MovieApiConfig.dart';
 import 'package:movie_hub/Helpers/APIConstant.dart';
 import 'package:movie_hub/Modules/Service/NetworkService/NetworkService.dart';
-import 'package:movie_hub/Modules/UISections/Dashboard/Model/MovieDetails.dart';
-import 'package:movie_hub/Modules/UISections/Dashboard/Model/MovieList.dart';
+import 'package:movie_hub/Modules/UISections/Movie/MovieDetails/Model/MovieDetails.dart';
 
-import '../Model/MovieInfo.dart';
+import '../../MovieList/Model/MovieInfo.dart';
+import '../../MovieList/Model/MovieList.dart';
 
 class MovieViewModel extends GetxController {
   var topRatedMovieList = <MovieInfo>[].obs;
@@ -54,9 +54,22 @@ class MovieViewModel extends GetxController {
       if (output == null) {
         return;
       }
-      movieDetails?.value = output.data?.first;
+      movieDetails.value = output.data?.first;
     } catch (err) {
       print('fetchMovieDetails Error = ${err.toString()}');
     }
+  }
+
+  String formatRuntime(int? runtimeInMinutes) {
+    if (runtimeInMinutes == null) {
+      return "";
+    }
+    // Convert total runtime into hours, minutes, and seconds
+    int hours = runtimeInMinutes ~/ 60; // Integer division to get hours
+    int minutes = runtimeInMinutes % 60; // Get remainder minutes
+    int seconds = 0; // Seconds not provided in the API
+
+    // Return formatted string (optional: handle plural/singular)
+    return '${hours}h ${minutes}m ${seconds}s';
   }
 }
