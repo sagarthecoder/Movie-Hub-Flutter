@@ -9,6 +9,7 @@ class DashboardScreen extends StatelessWidget {
   DashboardScreen({super.key}) {
     viewModel.fetchTopRatedMovies();
     viewModel.fetchUpcomingMovies();
+    viewModel.fetchMovieDetails('278');
   }
 
   @override
