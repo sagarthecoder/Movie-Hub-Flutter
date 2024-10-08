@@ -5,6 +5,7 @@ import 'package:movie_hub/Modules/UISections/Dashboard/Views/DashboardScreen.dar
 
 import '../../../../Service/AuthService/AuthService.dart';
 import '../../../CustomViews/Field/CustomTextField.dart';
+import '../../../Home/Views/HomeScreen.dart';
 import '../../CommonViews/ContinueWithView.dart';
 import '../../Login/Model/OauthEnums.dart';
 import '../../Login/ViewModel/AuthViewModel.dart';
@@ -231,6 +232,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
   void gotoHome(BuildContext context) {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => DashboardScreen()));
+        context, MaterialPageRoute(builder: (context) => HomeScreen()));
   }
 }

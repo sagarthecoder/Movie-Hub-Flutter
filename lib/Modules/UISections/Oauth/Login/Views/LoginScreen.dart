@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_hub/Modules/UISections/Dashboard/Views/DashboardScreen.dart';
+import 'package:movie_hub/Modules/UISections/Home/Views/HomeScreen.dart';
 
 import '../../../../Service/AuthService/AuthService.dart';
 import '../../../CustomViews/Field/CustomTextField.dart';
@@ -237,6 +238,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void gotoHome(BuildContext context) {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => DashboardScreen()));
+        context, MaterialPageRoute(builder: (context) => HomeScreen()));
   }
 }
