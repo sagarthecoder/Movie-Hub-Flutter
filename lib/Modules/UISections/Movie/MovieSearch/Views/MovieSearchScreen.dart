@@ -15,10 +15,26 @@ class MovieSearchScreen extends StatelessWidget {
       body: Stack(
         children: [
           _buildBackgroundContainer(),
+          _buildEmptyResult(),
           _buildContent(),
         ],
       ),
     );
+  }
+
+  Widget _buildEmptyResult() {
+    return Obx(() {
+      if (viewModel.searchMovieList.isEmpty) {
+        return const Center(
+          child: Text(
+            'No items found',
+            style: TextStyle(fontSize: 30, color: Colors.white),
+          ),
+        );
+      } else {
+        return Container();
+      }
+    });
   }
 
   Widget _buildBackgroundContainer() {

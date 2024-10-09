@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_hub/Modules/UISections/Dashboard/Views/DashboardScreen.dart';
 import 'package:movie_hub/Modules/UISections/Movie/MovieSearch/Views/MovieSearchScreen.dart';
+import 'package:movie_hub/Modules/UISections/Settings/Views/SettingScreen.dart';
 
 import '../../TabBar/Model/TabItem.dart';
 
@@ -37,9 +38,7 @@ class _HomeScreenState extends State<HomeScreen>
         children: [
           DashboardScreen(),
           MovieSearchScreen(),
-          const Center(
-            child: Text('Setting'),
-          )
+          SettingScreen(),
         ],
       ),
     );
