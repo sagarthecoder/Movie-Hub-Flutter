@@ -10,7 +10,31 @@ import '../../MovieList/Model/MovieList.dart';
 class MovieViewModel extends GetxController {
   var topRatedMovieList = <MovieInfo>[].obs;
   var upcomingMovieList = <MovieInfo>[].obs;
+  var searchMovieList = <MovieInfo>[].obs;
   Rx<MovieDetails?> movieDetails = MovieDetails().obs;
+
+  Map<int, String> genreMap = {
+    28: "Action",
+    12: "Adventure",
+    16: "Animation",
+    35: "Comedy",
+    80: "Crime",
+    99: "Documentary",
+    18: "Drama",
+    10751: "Family",
+    14: "Fantasy",
+    36: "History",
+    27: "Horror",
+    10402: "Music",
+    9648: "Mystery",
+    10749: "Romance",
+    878: "Science Fiction",
+    10770: "TV Movie",
+    53: "Thriller",
+    10752: "War",
+    37: "Western"
+  };
+
   void fetchTopRatedMovies() async {
     try {
       const url =
@@ -21,7 +45,10 @@ class MovieViewModel extends GetxController {
       if (output == null) {
         return;
       }
-      topRatedMovieList.value = output.data?.first.results ?? [];
+      final items = output.data?.first.results;
+      if (items != null) {
+        topRatedMovieList.value = items;
+      }
     } catch (err) {
       print('Error = ${err.toString()}');
     }
@@ -36,9 +63,33 @@ class MovieViewModel extends GetxController {
       if (output == null) {
         return;
       }
-      upcomingMovieList.value = output.data?.first.results ?? [];
+      final items = output.data?.first.results;
+      if (items != null) {
+        upcomingMovieList.value = items;
+      }
     } catch (err) {
       print('Error = ${err.toString()}');
+    }
+  }
+
+  void searchMovie(String? query) async {
+    if (query == null) {
+      return;
+    }
+    try {
+      String url =
+          '${APIConstant.baseURL}${APIConstant.movieSearchPath}?query=${query}&api_key=${MovieApiConfig.apiKey}';
+      final output = await NetworkService.shared
+          .genericApiRequest(url, RequestMethod.get, MovieList.fromJson);
+      if (output == null) {
+        return;
+      }
+      final items = output.data?.first.results;
+      if (items != null) {
+        searchMovieList.value = items;
+      }
+    } catch (err) {
+      print('Error on search API = ${err.toString()}');
     }
   }
 
@@ -69,7 +120,10 @@ class MovieViewModel extends GetxController {
     int minutes = runtimeInMinutes % 60; // Get remainder minutes
     int seconds = 0; // Seconds not provided in the API
 
-    // Return formatted string (optional: handle plural/singular)
     return '${hours}h ${minutes}m ${seconds}s';
+  }
+
+  String getGenreName(int genreID) {
+    return genreMap[genreID] ?? "Unknown Genre";
   }
 }
