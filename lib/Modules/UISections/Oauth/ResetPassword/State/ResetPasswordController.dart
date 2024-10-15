@@ -4,7 +4,9 @@ import 'package:get/get.dart';
 class ResetPasswordController extends GetxController {
   final newPasswordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-  var isValid = false.obs;
+  final emailController = TextEditingController();
+  var isValidPassword = false.obs;
+  var isValidEmail = false.obs;
   var isLoading = false.obs;
   @override
   void onInit() {
@@ -12,6 +14,7 @@ class ResetPasswordController extends GetxController {
     super.onInit();
     newPasswordController.addListener(_validatePassword);
     confirmPasswordController.addListener(_validatePassword);
+    emailController.addListener(_validateEmail);
   }
 
   @override
@@ -19,6 +22,7 @@ class ResetPasswordController extends GetxController {
     // TODO: implement dispose
     newPasswordController.dispose();
     confirmPasswordController.dispose();
+    emailController.dispose();
     super.dispose();
   }
 
@@ -30,13 +34,29 @@ class ResetPasswordController extends GetxController {
         _isValidPassword(newPassword) &&
         _isValidPassword(confirmPassword) &&
         newPassword == confirmPassword) {
-      isValid.value = true;
+      isValidPassword.value = true;
     } else {
-      isValid.value = false;
+      isValidPassword.value = false;
     }
   }
 
   bool _isValidPassword(String password) {
     return password.length > 6;
+  }
+
+  void _validateEmail() {
+    String email = emailController.text.trim();
+    if (email.isNotEmpty && _isValidEmail(email)) {
+      isValidEmail.value = true;
+    } else {
+      isValidEmail.value = false;
+    }
+  }
+
+  bool _isValidEmail(String email) {
+    final bool emailValid = RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(email);
+    return emailValid;
   }
 }

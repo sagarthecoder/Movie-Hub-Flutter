@@ -9,6 +9,7 @@ class AuthViewModel extends GetxController {
   var loginSuccess = false.obs;
   var logoutSuccess = false.obs;
   var resetPasswordSuccess = false.obs;
+  var isSentResetPasswordEmail = false.obs;
   var errorText = "".obs;
 
   Future<void> socialSignin(SocialSignInProvider provider) async {
@@ -52,6 +53,22 @@ class AuthViewModel extends GetxController {
         errorText.value = err.toString();
         print("failed to reset password = ${err.toString()}");
       }
+    }
+    isLoading.value = false;
+  }
+
+  void forgetPassword(String email) async {
+    if (email.isEmpty) {
+      return;
+    }
+    isLoading.value = true;
+    errorText.value = "";
+    try {
+      final _ = await AuthService.shared.sendResetPasswordEmail(email);
+      isSentResetPasswordEmail.value = true;
+    } catch (err) {
+      errorText.value = err.toString();
+      print("failed to reset password = ${err.toString()}");
     }
     isLoading.value = false;
   }

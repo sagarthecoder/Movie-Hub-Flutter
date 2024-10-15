@@ -152,12 +152,12 @@ class ResetPasswordScreen extends StatelessWidget {
   Widget _passwordActionButton() {
     return Obx(() {
       return Opacity(
-        opacity: (_controller.isValid.value) ? 1.0 : 0.7,
+        opacity: (_controller.isValidPassword.value) ? 1.0 : 0.7,
         child: SizedBox(
           width: double.infinity,
           height: 56.0,
           child: ElevatedButton(
-            onPressed: (_controller.isValid.value)
+            onPressed: (_controller.isValidPassword.value)
                 ? () {
                     updatePassword();
                   }
