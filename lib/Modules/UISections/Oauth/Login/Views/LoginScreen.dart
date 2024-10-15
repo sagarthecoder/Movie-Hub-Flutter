@@ -165,14 +165,16 @@ class _LoginScreenState extends State<LoginScreen> {
     return Column(
       children: [
         CustomTextField(
-          placeholder: 'Email',
+          placeholder: 'Enter Email',
+          labelText: "Email",
           controller: email,
         ),
         const SizedBox(
           height: 26,
         ),
         CustomTextField(
-          placeholder: 'Password',
+          placeholder: 'Enter Password',
+          labelText: "Password",
           controller: password,
         ),
       ],

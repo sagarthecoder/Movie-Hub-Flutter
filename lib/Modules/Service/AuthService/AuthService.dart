@@ -29,4 +29,8 @@ final class AuthService {
         await FirebaseAuth.instance.signInWithCredential(credential);
     print('credential id token = ${credential.idToken}');
   }
+
+  Future<void> updatePassword(String newPassword) async {
+    await _auth.currentUser?.updatePassword(newPassword);
+  }
 }

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:movie_hub/Modules/UISections/Oauth/ResetPassword/Views/ResetPasswordScreen.dart';
+import 'package:movie_hub/Modules/UISections/Settings/Model/SettingItemEnum.dart';
 
 class SettingScreen extends StatelessWidget {
   @override
@@ -20,13 +23,18 @@ class SettingScreen extends StatelessWidget {
         ),
         child: Column(
           children: [
-            _buildSettingItem(context, 'Profile', Icons.person_outline),
-            _buildSettingItem(context, 'Security', Icons.lock_outline),
-            _buildSettingItem(context, 'Theme', Icons.color_lens_outlined),
-            _buildSettingItem(context, 'News', Icons.article_outlined),
             _buildSettingItem(
-                context, 'Forget Password', Icons.lock_reset_outlined),
-            _buildSettingItem(context, 'Logout', Icons.logout_outlined),
+                context, SettingItem.profile, Icons.person_outline),
+            _buildSettingItem(
+                context, SettingItem.security, Icons.lock_outline),
+            _buildSettingItem(
+                context, SettingItem.theme, Icons.color_lens_outlined),
+            _buildSettingItem(
+                context, SettingItem.news, Icons.article_outlined),
+            _buildSettingItem(
+                context, SettingItem.resetPassword, Icons.lock_reset_outlined),
+            _buildSettingItem(
+                context, SettingItem.logout, Icons.logout_outlined),
             const Spacer(),
             _buildFooter(),
           ],
@@ -35,7 +43,8 @@ class SettingScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSettingItem(BuildContext context, String title, IconData icon) {
+  Widget _buildSettingItem(
+      BuildContext context, SettingItem item, IconData icon) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -44,7 +53,7 @@ class SettingScreen extends StatelessWidget {
       child: ListTile(
         leading: Icon(icon, color: Colors.white, size: 28),
         title: Text(
-          title,
+          item.getTitle(),
           style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w600,
@@ -54,7 +63,9 @@ class SettingScreen extends StatelessWidget {
         trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white),
         tileColor: Colors.deepPurple.withOpacity(0.8),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        onTap: () {},
+        onTap: () {
+          _handleItemTap(context, item);
+        },
       ),
     );
   }
@@ -69,5 +80,15 @@ class SettingScreen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void _handleItemTap(BuildContext context, SettingItem item) {
+    switch (item) {
+      case SettingItem.resetPassword:
+        Get.to(() => ResetPasswordScreen());
+        break;
+      default:
+        break;
+    }
   }
 }

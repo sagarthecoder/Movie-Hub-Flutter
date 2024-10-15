@@ -115,16 +115,22 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget buildTextFields() {
     return Column(
       children: [
-        CustomTextField(placeholder: 'Email', controller: email),
-        const SizedBox(
-          height: 26,
-        ),
-        CustomTextField(placeholder: 'Password', controller: password),
+        CustomTextField(
+            placeholder: 'Enter Email', labelText: "Email", controller: email),
         const SizedBox(
           height: 26,
         ),
         CustomTextField(
-            placeholder: 'Confirm password', controller: confirmPassword),
+            placeholder: 'Enter Password',
+            labelText: "Password",
+            controller: password),
+        const SizedBox(
+          height: 26,
+        ),
+        CustomTextField(
+            placeholder: 'Re-type password',
+            labelText: "Confirm password",
+            controller: confirmPassword),
       ],
     );
   }
