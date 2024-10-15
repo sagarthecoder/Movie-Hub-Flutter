@@ -1,44 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:movie_hub/Modules/UISections/Oauth/Login/ViewModel/AuthViewModel.dart';
+import 'package:movie_hub/Modules/UISections/Oauth/Login/Views/LoginScreen.dart';
 import 'package:movie_hub/Modules/UISections/Oauth/ResetPassword/Views/ResetPasswordScreen.dart';
 import 'package:movie_hub/Modules/UISections/Settings/Model/SettingItemEnum.dart';
 
 class SettingScreen extends StatelessWidget {
+  final _authViewModel = Get.put(AuthViewModel());
+  SettingScreen({super.key}) {
+    _authViewModel.isLoading.value = false;
+    _authViewModel.logoutSuccess.value = false;
+    _authViewModel.errorText.value = "";
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-        backgroundColor: Colors.deepPurple,
-        elevation: 0,
-      ),
-      body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.purpleAccent.shade100, Colors.deepPurple.shade900],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
+        appBar: AppBar(
+          title: const Text('Settings'),
+          backgroundColor: Colors.deepPurple,
+          elevation: 0,
         ),
-        child: Column(
+        body: Stack(
           children: [
-            _buildSettingItem(
-                context, SettingItem.profile, Icons.person_outline),
-            _buildSettingItem(
-                context, SettingItem.security, Icons.lock_outline),
-            _buildSettingItem(
-                context, SettingItem.theme, Icons.color_lens_outlined),
-            _buildSettingItem(
-                context, SettingItem.news, Icons.article_outlined),
-            _buildSettingItem(
-                context, SettingItem.resetPassword, Icons.lock_reset_outlined),
-            _buildSettingItem(
-                context, SettingItem.logout, Icons.logout_outlined),
-            const Spacer(),
-            _buildFooter(),
+            _buildContent(context),
+            _showLoaderIfNeeded(),
+            _gotoRoot(),
           ],
+        ));
+  }
+
+  Widget _showLoaderIfNeeded() {
+    return Obx(() {
+      return _authViewModel.isLoading.value
+          ? const Center(child: CircularProgressIndicator())
+          : Container();
+    });
+  }
+
+  Widget _buildContent(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.purpleAccent.shade100, Colors.deepPurple.shade900],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
         ),
+      ),
+      child: Column(
+        children: [
+          _buildSettingItem(context, SettingItem.profile, Icons.person_outline),
+          _buildSettingItem(context, SettingItem.security, Icons.lock_outline),
+          _buildSettingItem(
+              context, SettingItem.theme, Icons.color_lens_outlined),
+          _buildSettingItem(context, SettingItem.news, Icons.article_outlined),
+          _buildSettingItem(
+              context, SettingItem.resetPassword, Icons.lock_reset_outlined),
+          _buildSettingItem(context, SettingItem.logout, Icons.logout_outlined),
+          const Spacer(),
+          _buildFooter(),
+        ],
       ),
     );
   }
@@ -87,8 +108,21 @@ class SettingScreen extends StatelessWidget {
       case SettingItem.resetPassword:
         Get.to(() => ResetPasswordScreen());
         break;
+      case SettingItem.logout:
+        _authViewModel.logout();
       default:
         break;
     }
+  }
+
+  Widget _gotoRoot() {
+    return Obx(() {
+      if (_authViewModel.logoutSuccess.value) {
+        Future.microtask(() => Get.offAll(() => const LoginScreen()));
+        return const SizedBox();
+      } else {
+        return Container(); // Return a placeholder when not navigating
+      }
+    });
   }
 }

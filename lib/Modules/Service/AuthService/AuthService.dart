@@ -33,4 +33,8 @@ final class AuthService {
   Future<void> updatePassword(String newPassword) async {
     await _auth.currentUser?.updatePassword(newPassword);
   }
+
+  Future<void> logout() async {
+    await _auth.signOut();
+  }
 }
