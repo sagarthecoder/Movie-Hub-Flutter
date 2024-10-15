@@ -18,6 +18,10 @@ class ResetPasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Reset Password'),
+        automaticallyImplyLeading: true,
+      ),
       body: Stack(
         children: [
           _buildContent(),

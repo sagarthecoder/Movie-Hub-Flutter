@@ -54,6 +54,9 @@ class NetworkService {
         }
       } else {
         // Offline Mode: Retrieve data from cache
+        if (requestMethod != RequestMethod.get) {
+          return null;
+        }
         var cachedResponse = await APICacheService.shared.fetchResponse(url);
         if (cachedResponse != null) {
           return GenericResponse.fromJson(cachedResponse, fromJsonT);
@@ -63,8 +66,8 @@ class NetworkService {
           return null;
         }
       }
-
-      if (response.statusCode == 200) {
+      int? statusCode = response.statusCode;
+      if (statusCode != null && statusCode >= 200 && statusCode < 300) {
         final result = {
           'data': response.data,
           'message': response.statusMessage.toString(),

@@ -18,6 +18,7 @@ class SettingScreen extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Settings'),
           backgroundColor: Colors.deepPurple,
+          automaticallyImplyLeading: false,
           elevation: 0,
         ),
         body: Stack(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:movie_hub/Helpers/MathHelper.dart';
 import 'package:movie_hub/Modules/UISections/CustomViews/NetworkImageView.dart';
+import 'package:movie_hub/Modules/UISections/Movie/Favorites/Model/FavoriteRequest.dart';
 import 'package:movie_hub/Modules/UISections/Movie/MovieDetails/Model/MovieDetails.dart';
 import 'package:movie_hub/Modules/UISections/Movie/MovieDetails/ViewModel/MovieViewModel.dart';
 import 'package:movie_hub/Modules/UISections/Movie/MovieDetails/Views/GenreListView.dart';
@@ -15,6 +16,7 @@ class MovieDetailScreen extends StatelessWidget {
   final Rx<MovieInfo> movieInfo;
   final MovieViewModel viewModel = Get.find<MovieViewModel>();
   MovieDetailScreen({required this.movieInfo, super.key}) {
+    viewModel.isLoading.value = false;
     viewModel.movieDetails.value = MovieDetails();
     viewModel.fetchMovieDetails(movieInfo.value.id?.toString());
   }
@@ -26,6 +28,7 @@ class MovieDetailScreen extends StatelessWidget {
         children: [
           _buildBackgroundContainer(),
           _buildComponents(),
+          _showLoaderIfNeeded(),
         ],
       ),
     );
@@ -42,6 +45,18 @@ class MovieDetailScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _showLoaderIfNeeded() {
+    return Obx(() {
+      if (viewModel.isLoading.value) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      } else {
+        return Container();
+      }
+    });
   }
 
   Widget _buildBackgroundContainer() {
@@ -69,7 +84,7 @@ class MovieDetailScreen extends StatelessWidget {
               _showPoster(),
               _buildGenres(),
               _buildMovieDescription(),
-              _addWatchListButton(),
+              _addFavoriteButton(),
               _addRating(),
               const SizedBox(
                 height: 30,
@@ -148,19 +163,31 @@ class MovieDetailScreen extends StatelessWidget {
     return MovieDescriptionView();
   }
 
-  Widget _addWatchListButton() {
+  Widget _addFavoriteButton() {
     return Container(
       margin: const EdgeInsets.only(top: 20),
       width: double.infinity,
       height: 54,
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          _didPressedFavoriteButton();
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.blue,
         ),
-        child: const Text('Add to Watchlist'),
+        child: const Text('Add to Favorite'),
       ),
     );
+  }
+
+  void _didPressedFavoriteButton() {
+    final movieId = movieInfo.value.id;
+    if (movieId == null) {
+      return;
+    }
+    final request =
+        FavoriteRequest(mediaId: movieId, mediaType: "movie", favorite: true);
+    viewModel.addToFavorite(request);
   }
 
   Widget _addRating() {

@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
 import 'package:movie_hub/Config/MovieApiConfig.dart';
 import 'package:movie_hub/Helpers/APIConstant.dart';
+import 'package:movie_hub/Modules/Service/AuthService/AuthService.dart';
 import 'package:movie_hub/Modules/Service/NetworkService/NetworkService.dart';
+import 'package:movie_hub/Modules/UISections/Movie/Favorites/Model/FavoriteRequest.dart';
+import 'package:movie_hub/Modules/UISections/Movie/Favorites/Model/FavoriteResponse.dart';
 import 'package:movie_hub/Modules/UISections/Movie/MovieDetails/Model/MovieDetails.dart';
 
 import '../../MovieList/Model/MovieInfo.dart';
@@ -11,8 +16,9 @@ class MovieViewModel extends GetxController {
   var topRatedMovieList = <MovieInfo>[].obs;
   var upcomingMovieList = <MovieInfo>[].obs;
   var searchMovieList = <MovieInfo>[].obs;
+  var favoriteMovieList = <MovieInfo>[].obs;
+  var isLoading = false.obs;
   Rx<MovieDetails?> movieDetails = MovieDetails().obs;
-
   Map<int, String> genreMap = {
     28: "Action",
     12: "Adventure",
@@ -72,6 +78,24 @@ class MovieViewModel extends GetxController {
     }
   }
 
+  void fetchFavoriteMovies() async {
+    try {
+      String url =
+          '${APIConstant.baseURL}${APIConstant.getFavorites(MovieApiConfig.accountId)}?api_key=${MovieApiConfig.apiKey}&session_id=${MovieApiConfig.sessionId}';
+      final output = await NetworkService.shared
+          .genericApiRequest(url, RequestMethod.get, MovieList.fromJson);
+      if (output == null) {
+        return;
+      }
+      final items = output.data?.first.results;
+      if (items != null) {
+        favoriteMovieList.value = items;
+      }
+    } catch (err) {
+      print('Error = ${err.toString()}');
+    }
+  }
+
   void searchMovie(String? query) async {
     if (query == null) {
       return;
@@ -125,5 +149,23 @@ class MovieViewModel extends GetxController {
 
   String getGenreName(int genreID) {
     return genreMap[genreID] ?? "Unknown Genre";
+  }
+
+  void addToFavorite(FavoriteRequest request) async {
+    isLoading.value = true;
+    try {
+      String url =
+          '${APIConstant.baseURL}${APIConstant.addFavorites(MovieApiConfig.accountId)}?api_key=${MovieApiConfig.apiKey}&session_id=${MovieApiConfig.sessionId}';
+      print("URL = ${url}");
+      final body = jsonEncode(request.toJson());
+      print("Body = ${body}");
+      final response = await NetworkService.shared.genericApiRequest(
+          url, RequestMethod.post, FavoriteResponse.fromJson,
+          body: body);
+      fetchFavoriteMovies();
+    } catch (err) {
+      print("Adding favorite Error = ${err.toString()}");
+    }
+    isLoading.value = false;
   }
 }

@@ -12,6 +12,7 @@ class DashboardScreen extends StatelessWidget {
     viewModel.fetchTopRatedMovies();
     viewModel.fetchUpcomingMovies();
     viewModel.fetchMovieDetails('278');
+    viewModel.fetchFavoriteMovies();
   }
 
   @override
@@ -31,12 +32,16 @@ class DashboardScreen extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(top: 60),
       height: double.infinity,
-      child: Column(
-        children: [
-          _buildUserInfo(),
-          _buildTopRatedMovies(),
-          _buildUpcomingMovies(),
-        ],
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          children: [
+            _buildUserInfo(),
+            _buildTopRatedMovies(),
+            _buildUpcomingMovies(),
+            _buildMyFavoriteMovies(),
+          ],
+        ),
       ),
     );
   }
@@ -111,6 +116,26 @@ class DashboardScreen extends StatelessWidget {
             color: Colors.pink,
           ),
         );
+      }
+    });
+  }
+
+  Widget _buildMyFavoriteMovies() {
+    return Obx(() {
+      // This will rebuild when topRatedMovieList changes
+      if (viewModel.favoriteMovieList.isNotEmpty) {
+        return Container(
+          margin: EdgeInsets.only(top: 30),
+          child: MovieViewer(
+            movieItemCallback: (item) {
+              Get.to(() => MovieDetailScreen(movieInfo: item.obs));
+            },
+            title: "My favorites",
+            movieItems: viewModel.favoriteMovieList,
+          ),
+        );
+      } else {
+        return Container();
       }
     });
   }
