@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_hub/Modules/UISections/Dashboard/Views/DashboardScreen.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 import '../../../../Service/AuthService/AuthService.dart';
 import '../../../CustomViews/Field/CustomTextField.dart';
@@ -9,6 +9,8 @@ import '../../../Home/Views/HomeScreen.dart';
 import '../../CommonViews/ContinueWithView.dart';
 import '../../Login/Model/OauthEnums.dart';
 import '../../Login/ViewModel/AuthViewModel.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -55,11 +57,11 @@ class _SignupScreenState extends State<SignupScreen> {
           Container(
             margin: const EdgeInsets.only(top: 20, left: 31, right: 31),
             child: Column(children: [
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Create an Account',
-                  style: TextStyle(
+                  AppLocalizations.of(context)!.sign_up_screen_title,
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 30.0,
                     color: Colors.black,
@@ -79,11 +81,13 @@ class _SignupScreenState extends State<SignupScreen> {
                 margin: const EdgeInsets.only(top: 40),
                 child: RichText(
                     text: TextSpan(children: [
-                  const TextSpan(
-                      text: 'Already have an account? ',
-                      style: TextStyle(color: Colors.black54, fontSize: 14)),
                   TextSpan(
-                    text: 'Login',
+                      text:
+                          "${AppLocalizations.of(context)!.already_have_an_account} ",
+                      style:
+                          const TextStyle(color: Colors.black54, fontSize: 14)),
+                  TextSpan(
+                    text: AppLocalizations.of(context)!.sign_in_button_text,
                     style: const TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,
@@ -116,20 +120,26 @@ class _SignupScreenState extends State<SignupScreen> {
     return Column(
       children: [
         CustomTextField(
-            placeholder: 'Enter Email', labelText: "Email", controller: email),
+            placeholder:
+                AppLocalizations.of(context)!.email_text_field_placeholder,
+            labelText: AppLocalizations.of(context)!.email_text_field_label,
+            controller: email),
         const SizedBox(
           height: 26,
         ),
         CustomTextField(
-            placeholder: 'Enter Password',
-            labelText: "Password",
+            placeholder:
+                AppLocalizations.of(context)!.password_text_field_placeholder,
+            labelText: AppLocalizations.of(context)!.password_text_field_label,
             controller: password),
         const SizedBox(
           height: 26,
         ),
         CustomTextField(
-            placeholder: 'Re-type password',
-            labelText: "Confirm password",
+            placeholder: AppLocalizations.of(context)!
+                .confirm_password_text_field_placeholder,
+            labelText:
+                AppLocalizations.of(context)!.confirm_password_text_field_label,
             controller: confirmPassword),
       ],
     );
@@ -152,9 +162,9 @@ class _SignupScreenState extends State<SignupScreen> {
               backgroundColor: Colors.blueAccent,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8))),
-          child: const Text(
-            'Sign Up',
-            style: TextStyle(
+          child: Text(
+            AppLocalizations.of(context)!.signupText,
+            style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.normal),
@@ -237,7 +247,6 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   void gotoHome(BuildContext context) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => HomeScreen()));
+    Get.to(() => HomeScreen());
   }
 }

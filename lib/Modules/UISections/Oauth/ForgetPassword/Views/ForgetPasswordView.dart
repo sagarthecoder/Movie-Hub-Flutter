@@ -4,6 +4,7 @@ import 'package:movie_hub/Modules/UISections/CustomViews/Field/CustomTextField.d
 import 'package:movie_hub/Modules/UISections/Oauth/Login/ViewModel/AuthViewModel.dart';
 import 'package:movie_hub/Modules/UISections/Oauth/Login/Views/LoginScreen.dart';
 import 'package:movie_hub/Modules/UISections/Oauth/ResetPassword/State/ResetPasswordController.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ForgetPasswordView extends StatelessWidget {
   final _controller = Get.put(ResetPasswordController());
@@ -24,15 +25,15 @@ class ForgetPasswordView extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          _buildContent(),
+          _buildContent(context),
           _showLoadingIfNeeded(),
-          _buildSuccessAlert(),
+          _buildSuccessAlert(context),
         ],
       ),
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(BuildContext context) {
     return Align(
       alignment: Alignment.center,
       child: Container(
@@ -44,13 +45,14 @@ class ForgetPasswordView extends StatelessWidget {
           children: [
             CustomTextField(
               controller: _controller.emailController,
-              placeholder: 'Enter email',
-              labelText: "Email",
+              placeholder:
+                  AppLocalizations.of(context)!.email_text_field_placeholder,
+              labelText: AppLocalizations.of(context)!.email_text_field_label,
             ),
             const SizedBox(
               height: 20,
             ),
-            _forgotPasswordActionButton(),
+            _forgotPasswordActionButton(context),
           ],
         ),
       ),
@@ -67,17 +69,17 @@ class ForgetPasswordView extends StatelessWidget {
     });
   }
 
-  Widget _buildSuccessAlert() {
+  Widget _buildSuccessAlert(BuildContext context) {
     return Obx(() {
       if (_authViewModel.isSentResetPasswordEmail.value) {
         return AlertDialog(
           backgroundColor: Colors.black87,
-          title: const Text(
-            "Check your email",
-            style: TextStyle(color: Colors.green),
+          title: Text(
+            AppLocalizations.of(context)!.check_your_email_text,
+            style: const TextStyle(color: Colors.green),
           ),
           content: Text(
-            'Password reset link has been sent to ${_controller.emailController.text}',
+            '${AppLocalizations.of(context)!.password_reset_link_email_description} ${_controller.emailController.text}',
             style: const TextStyle(color: Colors.white),
           ),
           actions: [
@@ -86,9 +88,9 @@ class ForgetPasswordView extends StatelessWidget {
                   Get.offAll(() => const LoginScreen());
                   _authViewModel.isSentResetPasswordEmail.value = false;
                 },
-                child: const Text(
-                  "Got it",
-                  style: TextStyle(color: Colors.pink, fontSize: 16),
+                child: Text(
+                  AppLocalizations.of(context)!.got_it,
+                  style: const TextStyle(color: Colors.pink, fontSize: 16),
                 ))
           ],
         );
@@ -98,7 +100,7 @@ class ForgetPasswordView extends StatelessWidget {
     });
   }
 
-  Widget _forgotPasswordActionButton() {
+  Widget _forgotPasswordActionButton(BuildContext context) {
     return Obx(() {
       return Opacity(
         opacity: (_controller.isValidEmail.value) ? 1.0 : 0.7,
@@ -115,9 +117,9 @@ class ForgetPasswordView extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0XFFD70404),
             ),
-            child: const Text(
-              'Reset Password',
-              style: TextStyle(
+            child: Text(
+              AppLocalizations.of(context)!.reset_password_text,
+              style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 15),

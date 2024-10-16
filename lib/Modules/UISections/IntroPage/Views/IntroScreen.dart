@@ -1,9 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_hub/Modules/UISections/Dashboard/Views/DashboardScreen.dart';
+import 'package:get/get.dart';
+import 'package:get/get_common/get_reset.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:movie_hub/Modules/UISections/Oauth/Login/Views/LoginScreen.dart';
-
 import 'WavePainter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class IntroScreen extends StatelessWidget {
   const IntroScreen({super.key});
@@ -56,9 +57,9 @@ class IntroScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text(
-              'Movie Hub',
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context)!.movie_hub,
+              style: const TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                   color: Colors.white),
@@ -66,10 +67,10 @@ class IntroScreen extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            const Text(
-              "Welcome to Movie-hub.\n Here you will get latest and old movies\nWatch them and enjoy!!!",
+            Text(
+              AppLocalizations.of(context)!.movie_hub_intro_description,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                   fontSize: 14, color: Colors.white38, letterSpacing: 1),
             ),
             const SizedBox(
@@ -77,19 +78,16 @@ class IntroScreen extends StatelessWidget {
             ),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
-                  );
+                  Get.to(() => LoginScreen());
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blueAccent,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                 ),
-                child: const Text(
-                  'Get Startted',
-                  style: TextStyle(color: Colors.white),
+                child: Text(
+                  AppLocalizations.of(context)!.get_started,
+                  style: const TextStyle(color: Colors.white),
                 ))
           ],
         ),

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../Login/Model/OauthEnums.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ContinueWithView extends StatefulWidget {
   final void Function(SocialSignInProvider provider)?
@@ -19,8 +20,8 @@ class _ContinueWithViewState extends State<ContinueWithView> {
     return Center(
       child: Column(
         children: [
-          const Text(
-            'Or continue with',
+          Text(
+            AppLocalizations.of(context)!.or_continue_with,
             style: TextStyle(
                 color: Colors.brown, fontSize: 14, fontWeight: FontWeight.w500),
           ),

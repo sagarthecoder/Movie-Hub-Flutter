@@ -4,6 +4,7 @@ import 'package:movie_hub/Modules/UISections/Oauth/Login/ViewModel/AuthViewModel
 import 'package:movie_hub/Modules/UISections/Oauth/Login/Views/LoginScreen.dart';
 import 'package:movie_hub/Modules/UISections/Oauth/ResetPassword/Views/ResetPasswordScreen.dart';
 import 'package:movie_hub/Modules/UISections/Settings/Model/SettingItemEnum.dart';
+import 'package:movie_hub/Modules/UISections/Preferences/Language/Views/LanguageView.dart';
 
 class SettingScreen extends StatelessWidget {
   final _authViewModel = Get.put(AuthViewModel());
@@ -54,7 +55,7 @@ class SettingScreen extends StatelessWidget {
           _buildSettingItem(context, SettingItem.security, Icons.lock_outline),
           _buildSettingItem(
               context, SettingItem.theme, Icons.color_lens_outlined),
-          _buildSettingItem(context, SettingItem.news, Icons.article_outlined),
+          _buildSettingItem(context, SettingItem.language, Icons.language),
           _buildSettingItem(
               context, SettingItem.resetPassword, Icons.lock_reset_outlined),
           _buildSettingItem(context, SettingItem.logout, Icons.logout_outlined),
@@ -109,6 +110,8 @@ class SettingScreen extends StatelessWidget {
       case SettingItem.resetPassword:
         Get.to(() => ResetPasswordScreen());
         break;
+      case SettingItem.language:
+        Get.to(() => LanguageView());
       case SettingItem.logout:
         _authViewModel.logout();
       default:

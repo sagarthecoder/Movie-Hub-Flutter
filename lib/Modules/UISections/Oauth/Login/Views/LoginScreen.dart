@@ -1,11 +1,6 @@
-import 'dart:ui';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_common/get_reset.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:movie_hub/Modules/UISections/Dashboard/Views/DashboardScreen.dart';
 import 'package:movie_hub/Modules/UISections/Home/Views/HomeScreen.dart';
 import 'package:movie_hub/Modules/UISections/Oauth/ForgetPassword/Views/ForgetPasswordView.dart';
 
@@ -15,6 +10,8 @@ import '../../CommonViews/ContinueWithView.dart';
 import '../../Signup/Views/SignupScreen.dart';
 import '../Model/OauthEnums.dart';
 import '../ViewModel/AuthViewModel.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -58,10 +55,10 @@ class _LoginScreenState extends State<LoginScreen> {
           Container(
             margin: const EdgeInsets.only(top: 20, left: 31, right: 31),
             child: Column(children: [
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Login here',
+                  AppLocalizations.of(context)!.sign_in_button_text,
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 24,
@@ -80,10 +77,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () {
                         Get.to(() => ForgetPasswordView());
                       },
-                      child: const Align(
+                      child: Align(
                         alignment: Alignment.centerRight,
                         child: Text(
-                          'Forgot password?',
+                          AppLocalizations.of(context)!.forgot_password_text,
                         ),
                       )),
                 ),
@@ -97,11 +94,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 margin: const EdgeInsets.only(top: 40),
                 child: RichText(
                     text: TextSpan(children: [
-                  const TextSpan(
-                      text: "Don't have account? ",
+                  TextSpan(
+                      text:
+                          "${AppLocalizations.of(context)!.dont_have_account_text} ",
                       style: TextStyle(color: Colors.black54, fontSize: 14)),
                   TextSpan(
-                    text: 'Sign up',
+                    text: AppLocalizations.of(context)!.signupText,
                     style: const TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,
@@ -171,16 +169,18 @@ class _LoginScreenState extends State<LoginScreen> {
     return Column(
       children: [
         CustomTextField(
-          placeholder: 'Enter Email',
-          labelText: "Email",
+          placeholder:
+              AppLocalizations.of(context)!.email_text_field_placeholder,
+          labelText: AppLocalizations.of(context)!.email_text_field_label,
           controller: email,
         ),
         const SizedBox(
           height: 26,
         ),
         CustomTextField(
-          placeholder: 'Enter Password',
-          labelText: "Password",
+          placeholder:
+              AppLocalizations.of(context)!.password_text_field_placeholder,
+          labelText: AppLocalizations.of(context)!.password_text_field_label,
           controller: password,
         ),
       ],
@@ -205,7 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8))),
           child: Text(
-            'Sign in',
+            AppLocalizations.of(context)!.sign_in_button_text,
             style: TextStyle(color: Colors.black),
           ),
         ),
@@ -245,7 +245,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void gotoHome(BuildContext context) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => HomeScreen()));
+    Get.to(() => HomeScreen());
   }
 }

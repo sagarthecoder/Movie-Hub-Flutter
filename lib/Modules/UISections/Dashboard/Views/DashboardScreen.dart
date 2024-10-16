@@ -4,6 +4,7 @@ import 'package:movie_hub/Modules/UISections/CustomViews/FullScreenImagView.dart
 import 'package:movie_hub/Modules/UISections/Movie/MovieDetails/ViewModel/MovieViewModel.dart';
 import 'package:movie_hub/Modules/UISections/Dashboard/Views/MovieViewer.dart';
 import 'package:movie_hub/Modules/UISections/Movie/MovieDetails/Views/MovieDetailScreen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DashboardScreen extends StatelessWidget {
   final MovieViewModel viewModel = Get.put(MovieViewModel());
@@ -22,44 +23,44 @@ class DashboardScreen extends StatelessWidget {
       body: Stack(
         children: [
           FullScreenImageView(imagePath: "utils/images/blurry-background.png"),
-          _displayOnScreenWidget(),
+          _displayOnScreenWidget(context),
         ],
       ),
     );
   }
 
-  Widget _displayOnScreenWidget() {
+  Widget _displayOnScreenWidget(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 60),
+      margin: const EdgeInsets.only(top: 60),
       height: double.infinity,
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
-            _buildUserInfo(),
-            _buildTopRatedMovies(),
-            _buildUpcomingMovies(),
-            _buildMyFavoriteMovies(),
+            _buildUserInfo(context),
+            _buildTopRatedMovies(context),
+            _buildUpcomingMovies(context),
+            _buildMyFavoriteMovies(context),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildUserInfo() {
+  Widget _buildUserInfo(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 16),
-      child: const Align(
+      margin: const EdgeInsets.only(left: 16),
+      child: Align(
         alignment: Alignment.topLeft,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const Text(
-              'Welcome back',
+            Text(
+              AppLocalizations.of(context)!.welcome_back,
               style: TextStyle(fontSize: 9, color: Colors.white),
             ),
-            Text(
+            const Text(
               'Sagar Das',
               style: TextStyle(
                   fontSize: 14,
@@ -72,17 +73,16 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTopRatedMovies() {
+  Widget _buildTopRatedMovies(BuildContext context) {
     return Obx(() {
-      // This will rebuild when topRatedMovieList changes
       if (viewModel.topRatedMovieList.isNotEmpty) {
         return Container(
-          margin: EdgeInsets.only(top: 30),
+          margin: const EdgeInsets.only(top: 30),
           child: MovieViewer(
             movieItemCallback: (item) {
               Get.to(() => MovieDetailScreen(movieInfo: item.obs));
             },
-            title: "Top Rated Movies",
+            title: AppLocalizations.of(context)!.top_rated_movies,
             movieItems: viewModel.topRatedMovieList,
           ),
         );
@@ -96,17 +96,16 @@ class DashboardScreen extends StatelessWidget {
     });
   }
 
-  Widget _buildUpcomingMovies() {
+  Widget _buildUpcomingMovies(BuildContext context) {
     return Obx(() {
-      // This will rebuild when topRatedMovieList changes
       if (viewModel.upcomingMovieList.isNotEmpty) {
         return Container(
-          margin: EdgeInsets.only(top: 30),
+          margin: const EdgeInsets.only(top: 30),
           child: MovieViewer(
             movieItemCallback: (item) {
               Get.to(() => MovieDetailScreen(movieInfo: item.obs));
             },
-            title: "Upcoming Movies",
+            title: AppLocalizations.of(context)!.upcoming_movies,
             movieItems: viewModel.upcomingMovieList,
           ),
         );
@@ -120,17 +119,16 @@ class DashboardScreen extends StatelessWidget {
     });
   }
 
-  Widget _buildMyFavoriteMovies() {
+  Widget _buildMyFavoriteMovies(BuildContext context) {
     return Obx(() {
-      // This will rebuild when topRatedMovieList changes
       if (viewModel.favoriteMovieList.isNotEmpty) {
         return Container(
-          margin: EdgeInsets.only(top: 30),
+          margin: const EdgeInsets.only(top: 30),
           child: MovieViewer(
             movieItemCallback: (item) {
               Get.to(() => MovieDetailScreen(movieInfo: item.obs));
             },
-            title: "My favorites",
+            title: AppLocalizations.of(context)!.my_favorites,
             movieItems: viewModel.favoriteMovieList,
           ),
         );
