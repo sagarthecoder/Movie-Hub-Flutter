@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'NetworkImageView.dart'; // Your custom widget for displaying network images.
+import 'NetworkImageView.dart';
 
 class FadingImageSlider extends StatefulWidget {
-  final List<String> imagePaths; // List of image paths or URLs
-  final Duration fadeDuration; // Duration for fading in/out
-  final Duration displayDuration; // Duration for displaying each image
+  final List<String> imagePaths;
+  final Duration fadeDuration;
+  final Duration displayDuration;
 
   FadingImageSlider({
     Key? key,
@@ -18,7 +18,7 @@ class FadingImageSlider extends StatefulWidget {
 }
 
 class _FadingImageSliderState extends State<FadingImageSlider> {
-  int _currentIndex = 0; // Current image index
+  int _currentIndex = 0;
 
   @override
   void initState() {
@@ -30,12 +30,11 @@ class _FadingImageSliderState extends State<FadingImageSlider> {
     Future.delayed(widget.displayDuration, () {
       if (mounted) {
         setState(() {
-          _currentIndex = (_currentIndex + 1) %
-              widget.imagePaths.length; // Move to the next image
+          _currentIndex = (_currentIndex + 1) % widget.imagePaths.length;
         });
 
         Future.delayed(widget.fadeDuration, () {
-          _startImageTransition(); // Start the next transition
+          _startImageTransition();
         });
       }
     });
@@ -46,9 +45,8 @@ class _FadingImageSliderState extends State<FadingImageSlider> {
     return AnimatedSwitcher(
       duration: widget.fadeDuration,
       child: NetworkImageView(
-        key:
-            ValueKey<int>(_currentIndex), // Key to differentiate between images
-        url: widget.imagePaths[_currentIndex], // Display current image
+        key: ValueKey<int>(_currentIndex),
+        url: widget.imagePaths[_currentIndex],
       ),
     );
   }

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../Login/Model/OauthEnums.dart';
@@ -7,7 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class ContinueWithView extends StatefulWidget {
   final void Function(SocialSignInProvider provider)?
       selectedSocialProviderHandler;
-  // const ContinueWithView({Key? key, })
+
   const ContinueWithView({super.key, this.selectedSocialProviderHandler});
 
   @override
@@ -17,13 +16,17 @@ class ContinueWithView extends StatefulWidget {
 class _ContinueWithViewState extends State<ContinueWithView> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Center(
       child: Column(
         children: [
           Text(
             AppLocalizations.of(context)!.or_continue_with,
-            style: TextStyle(
-                color: Colors.brown, fontSize: 14, fontWeight: FontWeight.w500),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onBackground,
+              fontWeight: FontWeight.w500,
+            ),
           ),
           const SizedBox(
             height: 20,
@@ -41,21 +44,23 @@ class _ContinueWithViewState extends State<ContinueWithView> {
               ),
               makeSocialButton(SocialSignInProvider.apple),
             ],
-          )
+          ),
         ],
       ),
     );
   }
 
   Widget makeSocialButton(SocialSignInProvider provider) {
+    final theme = Theme.of(context);
+
     return ElevatedButton(
       onPressed: () {
         widget.selectedSocialProviderHandler?.call(provider);
       },
       style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.greenAccent,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+        backgroundColor: theme.colorScheme.secondary,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
       child: Image.asset(
         height: 50,
         provider.getSocialImagePath(),

@@ -9,14 +9,16 @@ class IntroScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       body: Container(
-        color: Colors.black,
+        color: theme.colorScheme.background,
         child: Stack(
           children: [
             setFullScreenBackgroundImage(),
-            makeWave(),
-            buildIntroDescription(context),
+            makeWave(theme.colorScheme),
+            buildIntroDescription(context, theme),
           ],
         ),
       ),
@@ -32,20 +34,20 @@ class IntroScreen extends StatelessWidget {
     );
   }
 
-  Widget makeWave() {
+  Widget makeWave(ColorScheme colorScheme) {
     return Align(
       alignment: Alignment.bottomLeft,
       child: ClipPath(
         clipper: WavePainter(),
         child: Container(
-          color: Colors.grey,
+          color: colorScheme.primary,
           height: 430,
         ),
       ),
     );
   }
 
-  Widget buildIntroDescription(BuildContext context) {
+  Widget buildIntroDescription(BuildContext context, ThemeData theme) {
     return Align(
       alignment: Alignment.bottomLeft,
       child: Container(
@@ -57,10 +59,10 @@ class IntroScreen extends StatelessWidget {
           children: [
             Text(
               AppLocalizations.of(context)!.movie_hub,
-              style: const TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.onBackground,
+              ),
             ),
             const SizedBox(
               height: 20,
@@ -68,25 +70,29 @@ class IntroScreen extends StatelessWidget {
             Text(
               AppLocalizations.of(context)!.movie_hub_intro_description,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                  fontSize: 14, color: Colors.white38, letterSpacing: 1),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onBackground.withOpacity(0.7),
+                letterSpacing: 1,
+              ),
             ),
             const SizedBox(
               height: 60,
             ),
             ElevatedButton(
-                onPressed: () {
-                  Get.to(() => LoginScreen());
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blueAccent,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
+              onPressed: () {
+                Get.to(() => LoginScreen());
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: theme.colorScheme.secondary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                child: Text(
-                  AppLocalizations.of(context)!.get_started,
-                  style: const TextStyle(color: Colors.white),
-                ))
+              ),
+              child: Text(
+                AppLocalizations.of(context)!.get_started,
+                style: TextStyle(color: theme.colorScheme.onSecondary),
+              ),
+            ),
           ],
         ),
       ),

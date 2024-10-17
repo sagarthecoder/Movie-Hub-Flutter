@@ -7,6 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:movie_hub/l10n/l10n.dart';
 
 import 'Modules/UISections/Preferences/Language/Controller/LanguageController.dart';
+import 'Modules/UISections/Theme/Controller/ThemeController.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -14,19 +15,19 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Get.put(LanguageController());
+  Get.put(ThemeController());
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // final languageController = Get.put(LanguageController());
   final languageController = Get.find<LanguageController>();
+  final themeController = Get.find<ThemeController>();
   MyApp({super.key});
 
-  // This widget is the root of your application.
+  // This widget is the root of the application.
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      // final languageController = Get.find<LanguageController>();
       print(
           "Rebuild locale = ${languageController.currentLocale.value.languageCode}");
 
@@ -42,10 +43,7 @@ class MyApp extends StatelessWidget {
           GlobalCupertinoLocalizations.delegate,
         ],
         navigatorKey: navigatorKey,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
+        theme: themeController.currentTheme,
         home: IntroScreen(),
       );
     });

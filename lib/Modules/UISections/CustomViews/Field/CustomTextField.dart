@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatefulWidget {
@@ -6,12 +5,14 @@ class CustomTextField extends StatefulWidget {
   final String? labelText;
   final TextEditingController controller;
   final bool isObscureText;
-  const CustomTextField(
-      {this.placeholder = "",
-      this.labelText,
-      this.isObscureText = false,
-      required this.controller,
-      super.key});
+
+  const CustomTextField({
+    this.placeholder = "",
+    this.labelText,
+    this.isObscureText = false,
+    required this.controller,
+    super.key,
+  });
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -20,17 +21,25 @@ class CustomTextField extends StatefulWidget {
 class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context); // Fetch the current theme
+
     return TextField(
       controller: widget.controller,
       obscureText: widget.isObscureText,
+      style: TextStyle(color: theme.colorScheme.onBackground),
       decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          hintText: widget.placeholder,
-          filled: true,
-          fillColor: Colors.white60,
-          labelText: widget.labelText ?? ""),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: theme.colorScheme.primary),
+        ),
+        hintText: widget.placeholder,
+        filled: true,
+        fillColor: theme.scaffoldBackgroundColor,
+        hintStyle:
+            TextStyle(color: theme.colorScheme.onBackground.withOpacity(0.5)),
+        labelText: widget.labelText ?? "",
+        labelStyle: TextStyle(color: theme.colorScheme.primary),
+      ),
     );
   }
 }

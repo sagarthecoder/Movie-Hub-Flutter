@@ -1,5 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:movie_hub/Config/MovieApiConfig.dart';
@@ -10,12 +8,13 @@ class MovieViewer extends StatelessWidget {
   final String title;
   final RxList<MovieInfo> movieItems;
   final Function(MovieInfo movieInfo)? movieItemCallback;
-  MovieViewer(
-      {required this.title,
-      RxList<MovieInfo>? movieItems,
-      this.movieItemCallback,
-      Key? key})
-      : movieItems = movieItems ?? <MovieInfo>[].obs,
+
+  MovieViewer({
+    required this.title,
+    RxList<MovieInfo>? movieItems,
+    this.movieItemCallback,
+    Key? key,
+  })  : movieItems = movieItems ?? <MovieInfo>[].obs,
         super(key: key);
 
   @override
@@ -23,7 +22,7 @@ class MovieViewer extends StatelessWidget {
     return Container(
       child: Column(
         children: [
-          _buildHeader(),
+          _buildHeader(context),
           const SizedBox(
             height: 16,
           ),
@@ -33,7 +32,7 @@ class MovieViewer extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return Container(
       height: 24,
       margin: const EdgeInsets.only(left: 16, right: 16),
@@ -42,10 +41,12 @@ class MovieViewer extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.normal,
-                color: Colors.white),
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.normal,
+              color:
+                  Theme.of(context).textTheme.titleLarge?.color ?? Colors.white,
+            ),
           ),
         ],
       ),

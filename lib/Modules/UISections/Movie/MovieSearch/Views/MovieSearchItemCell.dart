@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:movie_hub/Config/MovieApiConfig.dart';
-import 'package:movie_hub/Helpers/MathHelper.dart';
 import 'package:movie_hub/Modules/UISections/CustomViews/NetworkImageView.dart';
 import 'package:movie_hub/Modules/UISections/Movie/MovieDetails/Model/GenreInfo.dart';
 import 'package:movie_hub/Modules/UISections/Movie/MovieDetails/ViewModel/MovieViewModel.dart';
 import 'package:movie_hub/Modules/UISections/Movie/MovieDetails/Views/GenreListView.dart';
-import 'package:movie_hub/Modules/UISections/Movie/MovieDetails/Views/MovieRatingSection.dart';
 import 'package:movie_hub/Modules/UISections/Movie/MovieList/Model/MovieInfo.dart';
 
 class MovieSearchItemCell extends StatelessWidget {
   final Rx<MovieInfo>? movieInfo;
   MovieSearchItemCell({this.movieInfo, super.key});
   MovieViewModel viewModel = Get.find<MovieViewModel>();
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       width: double.infinity,
-      color: Colors.grey.withOpacity(0.7),
+      color: theme.colorScheme.secondary.withOpacity(0.7),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           _showPoster(),
           Expanded(
-            child: _showDescription(),
+            child: _showDescription(theme),
           ),
         ],
       ),
@@ -42,7 +42,7 @@ class MovieSearchItemCell extends StatelessWidget {
     );
   }
 
-  Widget _showDescription() {
+  Widget _showDescription(ThemeData theme) {
     return Container(
       margin: EdgeInsets.only(top: 8, left: 8),
       child: Column(
@@ -58,12 +58,15 @@ class MovieSearchItemCell extends StatelessWidget {
             overflow: TextOverflow.visible,
             softWrap: true,
             maxLines: null,
-            style: TextStyle(color: Colors.white, fontSize: 15),
+            style: TextStyle(
+              color: theme.colorScheme.onSecondary,
+              fontSize: 15,
+            ),
           ),
           SizedBox(
             height: 10,
           ),
-          Align(alignment: Alignment.bottomLeft, child: _showRating()),
+          Align(alignment: Alignment.bottomLeft, child: _showRating(theme)),
         ],
       ),
     );
@@ -81,20 +84,23 @@ class MovieSearchItemCell extends StatelessWidget {
     );
   }
 
-  Widget _showRating() {
+  Widget _showRating(ThemeData theme) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Icon(Icons.star),
+        const Icon(Icons.star, color: Colors.yellow),
         const SizedBox(
           width: 10,
         ),
         Text(
           (movieInfo?.value.voteAverage ?? 0.0).toStringAsFixed(2),
-          style: const TextStyle(
-              fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
-        )
+          style: TextStyle(
+            fontSize: 14,
+            color: theme.colorScheme.onSecondary,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ],
     );
   }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:movie_hub/Modules/UISections/Dashboard/Views/DashboardScreen.dart';
 import 'package:movie_hub/Modules/UISections/Movie/MovieSearch/Views/MovieSearchScreen.dart';
 import 'package:movie_hub/Modules/UISections/Settings/Views/SettingScreen.dart';
-
 import '../../TabBar/Model/TabItem.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,24 +14,25 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _tabController = TabController(length: TabItem.values.length, vsync: this);
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _tabController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    // Get the current theme
+    final theme = Theme.of(context);
     return Scaffold(
-      bottomNavigationBar: makeTabBar(),
+      bottomNavigationBar: makeTabBar(theme),
       body: TabBarView(
         controller: _tabController,
         children: [
@@ -44,12 +44,15 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  Widget makeTabBar() {
+  Widget makeTabBar(ThemeData theme) {
     return Container(
-      color: Colors.white54,
+      color: theme.bottomNavigationBarTheme.backgroundColor,
       child: TabBar(
         controller: _tabController,
         indicatorPadding: const EdgeInsets.only(bottom: 4),
+        labelColor: theme.tabBarTheme.labelColor,
+        unselectedLabelColor: theme.tabBarTheme.unselectedLabelColor,
+        indicatorColor: theme.tabBarTheme.indicatorColor,
         tabs: [
           Tab(
             text: TabItem.home.getTitle(),

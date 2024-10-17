@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:movie_hub/Modules/UISections/Movie/MovieDetails/ViewModel/MovieViewModel.dart';
 import 'package:movie_hub/Modules/UISections/Movie/MovieSearch/Views/MovieSearchItemCell.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MovieSearchScreen extends StatelessWidget {
   MovieSearchScreen({super.key});
@@ -14,20 +15,20 @@ class MovieSearchScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          _buildBackgroundContainer(),
-          _buildEmptyResult(),
-          _buildContent(),
+          _buildBackgroundContainer(context),
+          _buildEmptyResult(context),
+          _buildContent(context),
         ],
       ),
     );
   }
 
-  Widget _buildEmptyResult() {
+  Widget _buildEmptyResult(BuildContext context) {
     return Obx(() {
       if (viewModel.searchMovieList.isEmpty) {
-        return const Center(
+        return Center(
           child: Text(
-            'No items found',
+            AppLocalizations.of(context)!.no_items_found,
             style: TextStyle(fontSize: 30, color: Colors.white),
           ),
         );
@@ -37,21 +38,24 @@ class MovieSearchScreen extends StatelessWidget {
     });
   }
 
-  Widget _buildBackgroundContainer() {
+  Widget _buildBackgroundContainer(BuildContext context) {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Colors.black, Colors.green],
+          colors: [
+            Theme.of(context).colorScheme.background,
+            Theme.of(context).colorScheme.primary,
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 50, left: 16, right: 16),
       child: Column(
@@ -59,32 +63,33 @@ class MovieSearchScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Search',
+            AppLocalizations.of(context)!.search_tab_text,
             style: TextStyle(
-                color: Colors.white, fontSize: 22, fontWeight: FontWeight.w500),
+              color: Theme.of(context).colorScheme.onBackground,
+              fontSize: 22,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-          SizedBox(
-            height: 20,
-          ),
-          _buildSearch(),
-          SizedBox(
-            height: 30,
-          ),
+          const SizedBox(height: 20),
+          _buildSearch(context),
+          const SizedBox(height: 30),
           _showSearchResults(),
         ],
       ),
     );
   }
 
-  Widget _buildSearch() {
+  Widget _buildSearch(BuildContext context) {
     return Container(
       width: double.infinity,
       height: 44,
       child: SearchBar(
         controller: searchController,
-        hintText: 'Search',
-        leading: Icon(Icons.search),
-        backgroundColor: WidgetStatePropertyAll(Colors.grey),
+        hintText: AppLocalizations.of(context)!.search_tab_text,
+        leading:
+            Icon(Icons.search, color: Theme.of(context).colorScheme.onSurface),
+        backgroundColor:
+            MaterialStateProperty.all(Theme.of(context).colorScheme.surface),
         onSubmitted: (outputText) {
           viewModel.searchMovie(outputText);
         },
@@ -101,7 +106,7 @@ class MovieSearchScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: viewModel.searchMovieList.map((item) {
               return Container(
-                margin: EdgeInsets.only(bottom: 10),
+                margin: const EdgeInsets.only(bottom: 10),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16),
                   child: MovieSearchItemCell(

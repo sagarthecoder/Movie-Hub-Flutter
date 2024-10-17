@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:movie_hub/Modules/UISections/CustomViews/Field/CustomTextField.dart';
 import 'package:movie_hub/Modules/UISections/Oauth/Login/ViewModel/AuthViewModel.dart';
 import 'package:movie_hub/Modules/UISections/Oauth/ResetPassword/State/ResetPasswordController.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
   final _controller = Get.put(ResetPasswordController());
@@ -19,15 +19,19 @@ class ResetPasswordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Reset Password'),
+        title: Text(
+          AppLocalizations.of(context)!.reset_password_text,
+          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+        ),
+        backgroundColor: Theme.of(context).colorScheme.primary,
         automaticallyImplyLeading: true,
       ),
       body: Stack(
         children: [
-          _buildContent(),
+          _buildContent(context),
           _showLoaderIfNeeded(),
-          _showErrorIfNeeded(),
-          _showSuccessDialog(),
+          _showErrorIfNeeded(context),
+          _showSuccessDialog(context),
         ],
       ),
     );
@@ -41,51 +45,52 @@ class ResetPasswordScreen extends StatelessWidget {
     });
   }
 
-  Widget _showErrorIfNeeded() {
+  Widget _showErrorIfNeeded(BuildContext context) {
     return Obx(() {
       return _authViewModel.errorText.value.isNotEmpty
           ? Center(
               child: AlertDialog(
-              backgroundColor: Colors.black,
-              title: const Text(
-                'Error',
-                style: TextStyle(color: Colors.red),
-              ),
-              content: Text(
-                _authViewModel.errorText.value,
-                style: TextStyle(color: Colors.white),
-              ),
-              actions: [
-                TextButton(
+                backgroundColor: Theme.of(context).colorScheme.background,
+                title: Text(
+                  'Error',
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                ),
+                content: Text(
+                  _authViewModel.errorText.value,
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onBackground),
+                ),
+                actions: [
+                  TextButton(
                     onPressed: () {
                       _authViewModel.errorText.value = "";
                       Get.back();
                     },
-                    child: const Text("Ok"))
-              ],
-            ))
+                    child: Text(
+                      "Ok",
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary),
+                    ),
+                  )
+                ],
+              ),
+            )
           : Container();
     });
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 60, left: 26, right: 26),
       child: Column(
         children: [
           _setImage(),
-          const SizedBox(
-            height: 40,
-          ),
-          _addTitleDescription(),
-          const SizedBox(
-            height: 45,
-          ),
-          _buildTextFields(),
-          const SizedBox(
-            height: 30,
-          ),
-          _passwordActionButton(),
+          const SizedBox(height: 40),
+          _addTitleDescription(context),
+          const SizedBox(height: 45),
+          _buildTextFields(context),
+          const SizedBox(height: 30),
+          _passwordActionButton(context),
         ],
       ),
     );
@@ -105,21 +110,21 @@ class ResetPasswordScreen extends StatelessWidget {
     );
   }
 
-  Widget _addTitleDescription() {
-    return const Column(
+  Widget _addTitleDescription(BuildContext context) {
+    return Column(
       children: [
         Text(
-          "Enter New Password",
+          AppLocalizations.of(context)!.set_new_password_text,
           style: TextStyle(
-              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 24),
+              color: Theme.of(context).colorScheme.onBackground,
+              fontWeight: FontWeight.bold,
+              fontSize: 24),
         ),
-        SizedBox(
-          height: 4,
-        ),
+        const SizedBox(height: 4),
         Text(
-          "Set complex password to protect",
+          AppLocalizations.of(context)!.set_complex_password_description,
           style: TextStyle(
-              color: Color(0XFF7F909F),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
               fontWeight: FontWeight.normal,
               fontSize: 10),
         ),
@@ -127,29 +132,31 @@ class ResetPasswordScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTextFields() {
+  Widget _buildTextFields(BuildContext context) {
     return Column(
       children: [
         CustomTextField(
           controller: _controller.newPasswordController,
-          labelText: "New Password",
-          placeholder: "Enter new password",
+          labelText:
+              AppLocalizations.of(context)!.new_password_text_field_label,
+          placeholder:
+              AppLocalizations.of(context)!.new_password_text_field_placeholder,
           isObscureText: true,
         ),
-        const SizedBox(
-          height: 30,
-        ),
+        const SizedBox(height: 30),
         CustomTextField(
           controller: _controller.confirmPasswordController,
-          labelText: "Confirm Password",
-          placeholder: "Re-enter password",
+          labelText:
+              AppLocalizations.of(context)!.confirm_password_text_field_label,
+          placeholder: AppLocalizations.of(context)!
+              .confirm_password_text_field_placeholder,
           isObscureText: true,
         ),
       ],
     );
   }
 
-  Widget _passwordActionButton() {
+  Widget _passwordActionButton(BuildContext context) {
     return Obx(() {
       return Opacity(
         opacity: (_controller.isValidPassword.value) ? 1.0 : 0.7,
@@ -163,12 +170,12 @@ class ResetPasswordScreen extends StatelessWidget {
                   }
                 : null,
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0XFFD70404),
+              backgroundColor: Theme.of(context).colorScheme.primary,
             ),
-            child: const Text(
-              'Set New Password',
+            child: Text(
+              AppLocalizations.of(context)!.set_new_password_text,
               style: TextStyle(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.onPrimary,
                   fontWeight: FontWeight.bold,
                   fontSize: 15),
             ),
@@ -178,29 +185,36 @@ class ResetPasswordScreen extends StatelessWidget {
     });
   }
 
-  Widget _showSuccessDialog() {
+  Widget _showSuccessDialog(BuildContext context) {
     return Obx(() {
       if (_authViewModel.resetPasswordSuccess.value) {
         return Center(
-            child: AlertDialog(
-          backgroundColor: Colors.black,
-          title: const Text(
-            'Success',
-            style: TextStyle(color: Colors.green),
-          ),
-          content: const Text(
-            'Password updated successfully',
-            style: TextStyle(color: Colors.white),
-          ),
-          actions: [
-            TextButton(
+          child: AlertDialog(
+            backgroundColor: Theme.of(context).colorScheme.background,
+            title: Text(
+              AppLocalizations.of(context)!.success,
+              style: TextStyle(color: Theme.of(context).colorScheme.primary),
+            ),
+            content: Text(
+              AppLocalizations.of(context)!.password_updated_successfully,
+              style:
+                  TextStyle(color: Theme.of(context).colorScheme.onBackground),
+            ),
+            actions: [
+              TextButton(
                 onPressed: () {
                   Get.back();
                   _authViewModel.resetPasswordSuccess.value = false;
                 },
-                child: const Text("Ok"))
-          ],
-        ));
+                child: Text(
+                  "Ok",
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.primary),
+                ),
+              ),
+            ],
+          ),
+        );
       } else {
         return Container();
       }

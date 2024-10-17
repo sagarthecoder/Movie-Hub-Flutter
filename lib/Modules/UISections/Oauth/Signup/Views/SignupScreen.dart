@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 import '../../../../Service/AuthService/AuthService.dart';
 import '../../../CustomViews/Field/CustomTextField.dart';
@@ -9,7 +8,6 @@ import '../../../Home/Views/HomeScreen.dart';
 import '../../CommonViews/ContinueWithView.dart';
 import '../../Login/Model/OauthEnums.dart';
 import '../../Login/ViewModel/AuthViewModel.dart';
-
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -28,7 +26,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     email.addListener(updateStates);
     password.addListener(updateStates);
@@ -47,9 +44,11 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black38,
+        backgroundColor: theme.colorScheme.primaryContainer,
         toolbarHeight: 30,
       ),
       body: Stack(
@@ -61,10 +60,9 @@ class _SignupScreenState extends State<SignupScreen> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   AppLocalizations.of(context)!.sign_up_screen_title,
-                  style: const TextStyle(
+                  style: theme.textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
-                    fontSize: 30.0,
-                    color: Colors.black,
+                    color: theme.colorScheme.onBackground,
                   ),
                 ),
               ),
@@ -84,14 +82,15 @@ class _SignupScreenState extends State<SignupScreen> {
                   TextSpan(
                       text:
                           "${AppLocalizations.of(context)!.already_have_an_account} ",
-                      style:
-                          const TextStyle(color: Colors.black54, fontSize: 14)),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onBackground, fontSize: 14)),
                   TextSpan(
                     text: AppLocalizations.of(context)!.sign_in_button_text,
-                    style: const TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 11),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 11,
+                    ),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
                         print('Login Tapped');
@@ -146,6 +145,8 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Widget makeSignUpButton() {
+    final theme = Theme.of(context);
+
     return SizedBox(
       width: double.infinity,
       height: 60,
@@ -159,15 +160,14 @@ class _SignupScreenState extends State<SignupScreen> {
                 }
               : null,
           style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blueAccent,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8))),
+            backgroundColor: theme.colorScheme.secondary,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
           child: Text(
             AppLocalizations.of(context)!.signupText,
-            style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.normal),
+            style: theme.textTheme.labelLarge
+                ?.copyWith(color: theme.colorScheme.onPrimary, fontSize: 16),
           ),
         ),
       ),
@@ -193,7 +193,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
   showAlertDialog(BuildContext context, String message,
       [String title = 'Alert!']) {
-    // set up the button
     Widget okButton = TextButton(
       child: const Text("OK"),
       onPressed: () {
@@ -201,16 +200,14 @@ class _SignupScreenState extends State<SignupScreen> {
       },
     );
 
-    // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text(title),
-      content: Text(message),
+      title: Text(title, style: Theme.of(context).textTheme.titleLarge),
+      content: Text(message, style: Theme.of(context).textTheme.bodyLarge),
       actions: [
         okButton,
       ],
     );
 
-    // show the dialog
     showDialog(
       context: context,
       builder: (BuildContext context) {

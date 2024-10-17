@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:movie_hub/Modules/UISections/Preferences/Language/Controller/LanguageController.dart';
@@ -12,76 +10,74 @@ class LanguageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const list = LanguageEnum.values;
+    final list = LanguageEnum.values;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)?.language ?? "Language",
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimary,
+              fontWeight: FontWeight.bold),
         ),
         elevation: 0,
         automaticallyImplyLeading: true,
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      body: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 1,
-        ),
-        itemCount: list.length,
-        padding: EdgeInsets.only(top: 100),
-        itemBuilder: (context, index) {
-          final item = list[index];
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 1,
+          ),
+          itemCount: list.length,
+          padding: EdgeInsets.only(top: 20),
+          itemBuilder: (context, index) {
+            final item = list[index];
 
-          return GestureDetector(
-            onTap: () {
-              controller.setNewLanguage(item.getLocale());
-            },
-            child: Obx(() {
-              final isSelected =
-                  (item.getLocale() == controller.currentLocale.value);
-              return Container(
+            return GestureDetector(
+              onTap: () {
+                controller.setNewLanguage(item.getLocale());
+              },
+              child: Obx(() {
+                final isSelected =
+                    (item.getLocale() == controller.currentLocale.value);
+                return Container(
                   margin: const EdgeInsets.all(8),
-                  width: 150,
-                  height: 150,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      color: Colors.blueAccent),
+                    borderRadius: BorderRadius.circular(16),
+                    color: isSelected
+                        ? Theme.of(context).colorScheme.secondary
+                        : Theme.of(context).colorScheme.surface,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 4,
+                        spreadRadius: 2,
+                      ),
+                    ],
+                  ),
                   child: Stack(
                     children: [
                       Center(
                         child: Text(
                           item.getTitle(),
-                          style: const TextStyle(
-                              color: Colors.purple, fontSize: 20),
+                          style: TextStyle(
+                              color: isSelected
+                                  ? Theme.of(context).colorScheme.onSecondary
+                                  : Theme.of(context).colorScheme.onSurface,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600),
                         ),
                       ),
                       _setSelectedIconIfNeeded(isSelected),
                     ],
-                  ));
-            }),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildLanguageContainer(String name) {
-    return Container(
-      width: 150,
-      height: 150,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        color: Colors.deepPurple,
-      ),
-      child: Center(
-        child: Text(
-          name,
-          style: const TextStyle(
-            fontSize: 16,
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+                  ),
+                );
+              }),
+            );
+          },
         ),
       ),
     );

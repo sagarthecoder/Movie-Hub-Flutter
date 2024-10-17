@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:movie_hub/Config/MovieApiConfig.dart';
 import 'package:movie_hub/Modules/UISections/CustomViews/FadingImageSlider.dart';
-import 'package:movie_hub/Modules/UISections/CustomViews/FullScreenImagView.dart';
 import 'package:movie_hub/Modules/UISections/Movie/MovieDetails/ViewModel/MovieViewModel.dart';
 import 'package:movie_hub/Modules/UISections/Dashboard/Views/MovieViewer.dart';
 import 'package:movie_hub/Modules/UISections/Movie/MovieDetails/Views/MovieDetailScreen.dart';
@@ -21,20 +20,23 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black87,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
           Container(
-              width: double.infinity,
-              height: double.infinity,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Colors.black, Colors.black38],
-                ),
-              )),
-          // FullScreenImageView(imagePath: "utils/images/blurry-background.png"),
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Theme.of(context).colorScheme.primary,
+                  Theme.of(context).colorScheme.secondary.withOpacity(0.38),
+                ],
+              ),
+            ),
+          ),
           _displayOnScreenWidget(context),
         ],
       ),
@@ -71,14 +73,18 @@ class DashboardScreen extends StatelessWidget {
           children: [
             Text(
               AppLocalizations.of(context)!.welcome_back,
-              style: TextStyle(fontSize: 9, color: Colors.white),
+              style: TextStyle(
+                fontSize: 9,
+                color: Theme.of(context).textTheme.bodyLarge?.color ??
+                    Colors.white,
+              ),
             ),
             const Text(
               'Sagar Das',
               style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold),
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),
@@ -91,16 +97,16 @@ class DashboardScreen extends StatelessWidget {
       return Container(
         width: double.infinity,
         height: 300,
-        margin: EdgeInsets.only(top: 20),
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
+        margin: const EdgeInsets.only(top: 20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+        ),
         child: FadingImageSlider(
-            imagePaths: viewModel.topRatedMovieList
-                .where(
-                    (item) => item.posterPath != null) // Filter out null names
-                .map((item) =>
-                    MovieApiConfig.posterBaseURL +
-                    item.posterPath!) // Use the non-nullable name
-                .toList()),
+          imagePaths: viewModel.topRatedMovieList
+              .where((item) => item.posterPath != null)
+              .map((item) => MovieApiConfig.posterBaseURL + item.posterPath!)
+              .toList(),
+        ),
       );
     });
   }

@@ -29,7 +29,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     email.addListener(updateStates);
     password.addListener(updateStates);
@@ -47,6 +46,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: 30,
@@ -59,9 +60,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   AppLocalizations.of(context)!.sign_in_button_text,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 24,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                      color: theme.colorScheme.onBackground,
                       fontWeight: FontWeight.bold),
                 ),
               ),
@@ -81,6 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         alignment: Alignment.centerRight,
                         child: Text(
                           AppLocalizations.of(context)!.forgot_password_text,
+                          style: TextStyle(color: theme.colorScheme.primary),
                         ),
                       )),
                 ),
@@ -97,11 +98,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextSpan(
                       text:
                           "${AppLocalizations.of(context)!.dont_have_account_text} ",
-                      style: TextStyle(color: Colors.black54, fontSize: 14)),
+                      style: TextStyle(
+                          color:
+                              theme.colorScheme.onBackground.withOpacity(0.7),
+                          fontSize: 14)),
                   TextSpan(
                     text: AppLocalizations.of(context)!.signupText,
-                    style: const TextStyle(
-                        color: Colors.blue,
+                    style: TextStyle(
+                        color: theme.colorScheme.primary,
                         fontWeight: FontWeight.bold,
                         fontSize: 11),
                     recognizer: TapGestureRecognizer()
@@ -141,22 +145,22 @@ class _LoginScreenState extends State<LoginScreen> {
       [String title = 'Alert!']) {
     // set up the button
     Widget okButton = TextButton(
-      child: const Text("OK"),
+      child: Text("OK",
+          style: TextStyle(color: Theme.of(context).colorScheme.primary)),
       onPressed: () {
         Navigator.of(context).pop();
       },
     );
 
-    // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text(title),
+      title: Text(title,
+          style: TextStyle(color: Theme.of(context).colorScheme.primary)),
       content: Text(message),
       actions: [
         okButton,
       ],
     );
 
-    // show the dialog
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -201,12 +205,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
               : null,
           style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blueAccent,
+              backgroundColor: Theme.of(context).colorScheme.secondary,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8))),
           child: Text(
             AppLocalizations.of(context)!.sign_in_button_text,
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSecondary),
           ),
         ),
       ),
