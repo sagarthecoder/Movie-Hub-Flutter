@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:movie_hub/Modules/UISections/Preferences/Language/Controller/LanguageController.dart';
 import 'package:movie_hub/Modules/UISections/Preferences/Language/Model/LanguageEnum.dart';
-
-import '../../../../../l10n/l10n.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LanguageView extends StatelessWidget {
   final controller = Get.find<LanguageController>();
@@ -17,6 +16,10 @@ class LanguageView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        title: Text(
+          AppLocalizations.of(context)?.language ?? "Language",
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
         elevation: 0,
         automaticallyImplyLeading: true,
       ),
@@ -26,6 +29,7 @@ class LanguageView extends StatelessWidget {
           childAspectRatio: 1,
         ),
         itemCount: list.length,
+        padding: EdgeInsets.only(top: 100),
         itemBuilder: (context, index) {
           final item = list[index];
 
@@ -34,8 +38,8 @@ class LanguageView extends StatelessWidget {
               controller.setNewLanguage(item.getLocale());
             },
             child: Obx(() {
-              final isSelected = (item.getLocale() ==
-                  L10n.all[controller.selectedLanguageIndex.value]);
+              final isSelected =
+                  (item.getLocale() == controller.currentLocale.value);
               return Container(
                   margin: const EdgeInsets.all(8),
                   width: 150,
@@ -86,12 +90,12 @@ class LanguageView extends StatelessWidget {
   Widget _setSelectedIconIfNeeded(bool isSelected) {
     if (isSelected) {
       return const Positioned(
-        top: 0,
-        right: 0,
+        top: 16,
+        right: 16,
         child: Icon(
           Icons.check_circle,
-          color: Colors.green,
-          size: 24,
+          color: Colors.lightGreenAccent,
+          size: 40,
         ),
       );
     } else {

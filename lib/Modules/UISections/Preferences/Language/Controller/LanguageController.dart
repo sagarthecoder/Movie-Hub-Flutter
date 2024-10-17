@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LanguageController extends GetxController {
   final languages = L10n.all;
-  var selectedLanguageIndex = 0.obs;
+  var currentLocale = L10n.all[0].obs;
 
   LanguageController() {
     loadLanguage();
@@ -23,19 +23,17 @@ class LanguageController extends GetxController {
     }
     for (int i = 0; i < languages.length; i++) {
       if (languages[i].languageCode == cachedLanguageCode) {
-        selectedLanguageIndex.value = i;
+        currentLocale.value = languages[i];
       }
     }
-    print("pre Selected langugae = ${selectedLanguageIndex.value}");
+    Get.updateLocale(currentLocale.value);
+    print("pre Selected langugae = ${currentLocale.value.languageCode}");
   }
 
   Future<void> setNewLanguage(Locale locale) async {
     await addToDB(locale);
-    int? matchedIndex = findMatchedLanguageIndex(locale);
-    print("matchedIndex = $matchedIndex");
-    if (matchedIndex != null) {
-      selectedLanguageIndex.value = matchedIndex;
-    }
+    currentLocale.value = locale;
+    Get.updateLocale(currentLocale.value);
   }
 
   Future<void> addToDB(Locale locale) async {
@@ -46,15 +44,5 @@ class LanguageController extends GetxController {
     } catch (err) {
       print("language error = ${err.toString()}");
     }
-  }
-
-  int? findMatchedLanguageIndex(Locale locale) {
-    print("locale match given = ${locale.languageCode}");
-    for (int i = 0; i < languages.length; i++) {
-      if (languages[i].languageCode == locale.languageCode) {
-        return i;
-      }
-    }
-    return null;
   }
 }

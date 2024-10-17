@@ -18,23 +18,23 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  // final languageController = Get.find<LanguageController>();
+  // final languageController = Get.put(LanguageController());
+  final languageController = Get.find<LanguageController>();
   MyApp({super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final languageController = Get.find<LanguageController>();
+      // final languageController = Get.find<LanguageController>();
       print(
-          "Rebuild locale = ${languageController.languages[languageController.selectedLanguageIndex.value]}");
+          "Rebuild locale = ${languageController.currentLocale.value.languageCode}");
 
       return GetMaterialApp(
         title: 'Movie Hub',
         debugShowCheckedModeBanner: false,
         supportedLocales: L10n.all,
-        locale: languageController
-            .languages[languageController.selectedLanguageIndex.value],
+        locale: languageController.currentLocale.value,
         localizationsDelegates: const [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
