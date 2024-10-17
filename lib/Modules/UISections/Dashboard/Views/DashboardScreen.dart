@@ -94,6 +94,16 @@ class DashboardScreen extends StatelessWidget {
 
   Widget _buildImageAnimations() {
     return Obx(() {
+      var items = viewModel.topRatedMovieList
+          .where((item) => item.posterPath != null)
+          .map((item) => MovieApiConfig.posterBaseURL + item.posterPath!);
+      if (items.isEmpty) {
+        return Container(
+          width: double.infinity,
+          height: 300,
+          margin: const EdgeInsets.only(top: 20),
+        );
+      }
       return Container(
         width: double.infinity,
         height: 300,
@@ -102,10 +112,7 @@ class DashboardScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
         ),
         child: FadingImageSlider(
-          imagePaths: viewModel.topRatedMovieList
-              .where((item) => item.posterPath != null)
-              .map((item) => MovieApiConfig.posterBaseURL + item.posterPath!)
-              .toList(),
+          imagePaths: items.toList(),
         ),
       );
     });

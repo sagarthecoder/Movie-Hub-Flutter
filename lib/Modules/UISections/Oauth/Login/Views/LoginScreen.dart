@@ -23,7 +23,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
-  AuthViewModel viewModel = AuthViewModel();
+  final viewModel = Get.put(AuthViewModel());
 
   bool isLoading = false;
 
@@ -32,6 +32,14 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
     email.addListener(updateStates);
     password.addListener(updateStates);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    email.dispose();
+    password.dispose();
+    super.dispose();
   }
 
   void updateStates() {
@@ -56,79 +64,44 @@ class _LoginScreenState extends State<LoginScreen> {
           Container(
             margin: const EdgeInsets.only(top: 20, left: 31, right: 31),
             child: Column(children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  AppLocalizations.of(context)!.sign_in_button_text,
-                  style: theme.textTheme.titleLarge?.copyWith(
-                      color: theme.colorScheme.onBackground,
-                      fontWeight: FontWeight.bold),
-                ),
+              _buildTitle(context),
+              const SizedBox(
+                height: 40,
               ),
-              Container(
-                margin: const EdgeInsets.only(top: 40),
-                child: buildTextFields(),
+              _buildTextFields(),
+              _buildForgetPassword(),
+              const SizedBox(
+                height: 26,
               ),
-              Container(
-                margin: const EdgeInsets.only(top: 10),
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                      onPressed: () {
-                        Get.to(() => ForgetPasswordView());
-                      },
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          AppLocalizations.of(context)!.forgot_password_text,
-                          style: TextStyle(color: theme.colorScheme.primary),
-                        ),
-                      )),
-                ),
+              makeSignInButton(),
+              const SizedBox(
+                height: 40,
               ),
-              Container(
-                margin: const EdgeInsets.only(top: 26),
-                width: double.infinity,
-                child: makeSignInButton(),
+              _buildRichText(),
+              const SizedBox(
+                height: 60,
               ),
-              Container(
-                margin: const EdgeInsets.only(top: 40),
-                child: RichText(
-                    text: TextSpan(children: [
-                  TextSpan(
-                      text:
-                          "${AppLocalizations.of(context)!.dont_have_account_text} ",
-                      style: TextStyle(
-                          color:
-                              theme.colorScheme.onBackground.withOpacity(0.7),
-                          fontSize: 14)),
-                  TextSpan(
-                    text: AppLocalizations.of(context)!.signupText,
-                    style: TextStyle(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 11),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) {
-                          return const SignupScreen();
-                        }));
-                      },
-                  )
-                ])),
+              ContinueWithView(
+                selectedSocialProviderHandler: (provider) {
+                  socialLogin(provider, context);
+                },
               ),
-              Container(
-                margin: const EdgeInsets.only(top: 60),
-                child: ContinueWithView(
-                  selectedSocialProviderHandler: (provider) {
-                    socialLogin(provider, context);
-                  },
-                ),
-              )
             ]),
           ),
           showLoaderIfNeeded(),
         ]));
+  }
+
+  Widget _buildTitle(BuildContext context) {
+    var theme = Theme.of(context);
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        AppLocalizations.of(context)!.sign_in_button_text,
+        style: theme.textTheme.titleLarge?.copyWith(
+            color: theme.colorScheme.onBackground, fontWeight: FontWeight.bold),
+      ),
+    );
   }
 
   Widget showLoaderIfNeeded() {
@@ -169,7 +142,28 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget buildTextFields() {
+  Widget _buildForgetPassword() {
+    final theme = Theme.of(context);
+    return Container(
+      margin: const EdgeInsets.only(top: 10),
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: TextButton(
+            onPressed: () {
+              Get.to(() => ForgetPasswordView());
+            },
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                AppLocalizations.of(context)!.forgot_password_text,
+                style: TextStyle(color: theme.colorScheme.primary),
+              ),
+            )),
+      ),
+    );
+  }
+
+  Widget _buildTextFields() {
     return Column(
       children: [
         CustomTextField(
@@ -189,6 +183,31 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ],
     );
+  }
+
+  Widget _buildRichText() {
+    final theme = Theme.of(context);
+    return RichText(
+        text: TextSpan(children: [
+      TextSpan(
+          text: "${AppLocalizations.of(context)!.dont_have_account_text} ",
+          style: TextStyle(
+              color: theme.colorScheme.onBackground.withOpacity(0.7),
+              fontSize: 14)),
+      TextSpan(
+        text: AppLocalizations.of(context)!.signupText,
+        style: TextStyle(
+            color: theme.colorScheme.primary,
+            fontWeight: FontWeight.bold,
+            fontSize: 11),
+        recognizer: TapGestureRecognizer()
+          ..onTap = () {
+            Navigator.push(context, MaterialPageRoute(builder: (_) {
+              return const SignupScreen();
+            }));
+          },
+      )
+    ]));
   }
 
   Widget makeSignInButton() {
@@ -224,13 +243,17 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> socialLogin(
       SocialSignInProvider provider, BuildContext context) async {
     updateLoadingState(true);
+    viewModel.loginSuccess.value = false;
     try {
       await viewModel.socialSignin(provider);
       updateLoadingState(false);
-      gotoHome(context);
+      if (context.mounted && viewModel.loginSuccess.value) {
+        gotoHome(context);
+      }
     } catch (err) {
       updateLoadingState(false);
       print('Error = ${err.toString()}');
+      if (!context.mounted) return;
       showAlertDialog(context, err.toString());
     }
   }
@@ -249,6 +272,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void gotoHome(BuildContext context) {
-    Get.to(() => HomeScreen());
+    Future.microtask(() => Get.to(() => HomeScreen()));
   }
 }

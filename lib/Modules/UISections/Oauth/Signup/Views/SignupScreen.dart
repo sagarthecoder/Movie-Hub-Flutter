@@ -18,7 +18,7 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  AuthViewModel viewModel = AuthViewModel();
+  final viewModel = Get.put(AuthViewModel());
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController confirmPassword = TextEditingController();
@@ -27,9 +27,20 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   void initState() {
     super.initState();
+    viewModel.isLoading.value = false;
+    viewModel.errorText.value = "";
+    viewModel.loginSuccess.value = false;
     email.addListener(updateStates);
     password.addListener(updateStates);
     confirmPassword.addListener(updateStates);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    email.dispose();
+    password.dispose();
+    super.dispose();
   }
 
   void updateStates() {
@@ -56,57 +67,24 @@ class _SignupScreenState extends State<SignupScreen> {
           Container(
             margin: const EdgeInsets.only(top: 20, left: 31, right: 31),
             child: Column(children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  AppLocalizations.of(context)!.sign_up_screen_title,
-                  style: theme.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.onBackground,
-                  ),
-                ),
+              _buildTitle(context),
+              const SizedBox(
+                height: 40,
               ),
-              Container(
-                margin: const EdgeInsets.only(top: 40),
-                child: buildTextFields(),
+              buildTextFields(context),
+              const SizedBox(
+                height: 50,
               ),
-              Container(
-                margin: const EdgeInsets.only(top: 50),
-                width: double.infinity,
-                child: makeSignUpButton(),
+              makeSignUpButton(context),
+              _buildRichText(context),
+              const SizedBox(
+                height: 60,
               ),
-              Container(
-                margin: const EdgeInsets.only(top: 40),
-                child: RichText(
-                    text: TextSpan(children: [
-                  TextSpan(
-                      text:
-                          "${AppLocalizations.of(context)!.already_have_an_account} ",
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onBackground, fontSize: 14)),
-                  TextSpan(
-                    text: AppLocalizations.of(context)!.sign_in_button_text,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.primary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 11,
-                    ),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        print('Login Tapped');
-                        Navigator.pop(context);
-                      },
-                  )
-                ])),
+              ContinueWithView(
+                selectedSocialProviderHandler: (provider) {
+                  socialLogin(provider, context);
+                },
               ),
-              Container(
-                margin: const EdgeInsets.only(top: 60),
-                child: ContinueWithView(
-                  selectedSocialProviderHandler: (provider) {
-                    socialLogin(provider, context);
-                  },
-                ),
-              )
             ]),
           ),
           showLoaderIfNeeded()
@@ -115,7 +93,21 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget buildTextFields() {
+  Widget _buildTitle(BuildContext context) {
+    final theme = Theme.of(context);
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        AppLocalizations.of(context)!.sign_up_screen_title,
+        style: theme.textTheme.headlineSmall?.copyWith(
+          fontWeight: FontWeight.bold,
+          color: theme.colorScheme.onBackground,
+        ),
+      ),
+    );
+  }
+
+  Widget buildTextFields(BuildContext context) {
     return Column(
       children: [
         CustomTextField(
@@ -144,9 +136,8 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget makeSignUpButton() {
+  Widget makeSignUpButton(BuildContext context) {
     final theme = Theme.of(context);
-
     return SizedBox(
       width: double.infinity,
       height: 60,
@@ -171,6 +162,33 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildRichText(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      margin: const EdgeInsets.only(top: 40),
+      child: RichText(
+          text: TextSpan(children: [
+        TextSpan(
+            text: "${AppLocalizations.of(context)!.already_have_an_account} ",
+            style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onBackground, fontSize: 14)),
+        TextSpan(
+          text: AppLocalizations.of(context)!.sign_in_button_text,
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: theme.colorScheme.primary,
+            fontWeight: FontWeight.bold,
+            fontSize: 11,
+          ),
+          recognizer: TapGestureRecognizer()
+            ..onTap = () {
+              print('Login Tapped');
+              Navigator.pop(context);
+            },
+        )
+      ])),
     );
   }
 
@@ -219,13 +237,17 @@ class _SignupScreenState extends State<SignupScreen> {
   Future<void> socialLogin(
       SocialSignInProvider provider, BuildContext context) async {
     updateLoadingState(true);
+    viewModel.loginSuccess.value = false;
     try {
       await viewModel.socialSignin(provider);
       updateLoadingState(false);
-      gotoHome(context);
+      if (context.mounted && viewModel.loginSuccess.value) {
+        gotoHome(context);
+      }
     } catch (err) {
       updateLoadingState(false);
       print('Error = ${err.toString()}');
+      if (!context.mounted) return;
       showAlertDialog(context, err.toString());
     }
   }
@@ -244,6 +266,6 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   void gotoHome(BuildContext context) {
-    Get.to(() => HomeScreen());
+    Future.microtask(() => Get.to(() => HomeScreen()));
   }
 }

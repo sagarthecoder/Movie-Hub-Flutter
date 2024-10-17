@@ -13,14 +13,17 @@ class AuthViewModel extends GetxController {
   var errorText = "".obs;
 
   Future<void> socialSignin(SocialSignInProvider provider) async {
-    this.loginSuccess.value = false;
+    isLoading.value = true;
+    loginSuccess.value = false;
     switch (provider) {
       case SocialSignInProvider.google:
         try {
           await AuthService.shared.signInWithGoogle();
-          this.loginSuccess.value = true;
+          loginSuccess.value = true;
+          isLoading.value = false;
         } catch (err) {
           errorText.value = err.toString();
+          isLoading.value = false;
           print("Error google signin = ${err.toString()}");
         }
       default:
@@ -34,7 +37,7 @@ class AuthViewModel extends GetxController {
     isLoading.value = true;
     try {
       await AuthService.shared.signInWithEmail(email, password);
-      this.loginSuccess.value = true;
+      loginSuccess.value = true;
     } catch (err) {
       errorText.value = err.toString();
     }

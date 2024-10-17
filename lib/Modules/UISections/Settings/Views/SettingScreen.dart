@@ -136,7 +136,7 @@ class SettingScreen extends StatelessWidget {
   Widget _gotoRoot() {
     return Obx(() {
       if (_authViewModel.logoutSuccess.value) {
-        Future.microtask(() => Get.offAll(() => const LoginScreen()));
+        Future.microtask(() => Get.offAll(() => LoginScreen()));
         return const SizedBox();
       } else {
         return Container();

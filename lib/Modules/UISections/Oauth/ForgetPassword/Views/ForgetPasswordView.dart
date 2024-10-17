@@ -84,7 +84,7 @@ class ForgetPasswordView extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () {
-                Get.offAll(() => const LoginScreen());
+                Get.offAll(() => LoginScreen());
                 _authViewModel.isSentResetPasswordEmail.value = false;
               },
               child: Text(
