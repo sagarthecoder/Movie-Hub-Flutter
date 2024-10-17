@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:movie_hub/Config/MovieApiConfig.dart';
+import 'package:movie_hub/Modules/UISections/CustomViews/FadingImageSlider.dart';
 import 'package:movie_hub/Modules/UISections/CustomViews/FullScreenImagView.dart';
 import 'package:movie_hub/Modules/UISections/Movie/MovieDetails/ViewModel/MovieViewModel.dart';
 import 'package:movie_hub/Modules/UISections/Dashboard/Views/MovieViewer.dart';
@@ -22,7 +24,17 @@ class DashboardScreen extends StatelessWidget {
       backgroundColor: Colors.black87,
       body: Stack(
         children: [
-          FullScreenImageView(imagePath: "utils/images/blurry-background.png"),
+          Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Colors.black, Colors.black38],
+                ),
+              )),
+          // FullScreenImageView(imagePath: "utils/images/blurry-background.png"),
           _displayOnScreenWidget(context),
         ],
       ),
@@ -38,6 +50,7 @@ class DashboardScreen extends StatelessWidget {
         child: Column(
           children: [
             _buildUserInfo(context),
+            _buildImageAnimations(),
             _buildTopRatedMovies(context),
             _buildUpcomingMovies(context),
             _buildMyFavoriteMovies(context),
@@ -71,6 +84,25 @@ class DashboardScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildImageAnimations() {
+    return Obx(() {
+      return Container(
+        width: double.infinity,
+        height: 300,
+        margin: EdgeInsets.only(top: 20),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
+        child: FadingImageSlider(
+            imagePaths: viewModel.topRatedMovieList
+                .where(
+                    (item) => item.posterPath != null) // Filter out null names
+                .map((item) =>
+                    MovieApiConfig.posterBaseURL +
+                    item.posterPath!) // Use the non-nullable name
+                .toList()),
+      );
+    });
   }
 
   Widget _buildTopRatedMovies(BuildContext context) {
